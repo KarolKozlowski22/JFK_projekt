@@ -1,0 +1,27 @@
+# Virtual environments
+venv/
+env/
+*.egg-info/
+
+# ANLTR compilation files
+*.interp
+*.tokens
+*.rules
+*.dfa
+*.g4
+*.java
+*.class
+*.jar
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+
+anltr.jar
+
