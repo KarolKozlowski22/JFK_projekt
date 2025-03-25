@@ -10,4 +10,6 @@ declaration : (INT | FLOAT) ID SEMICOLON;
 assignment : ID EQUALITY expr SEMICOLON;
 printFunc : PRINT expr SEMICOLON;
 readFunc : READ expr SEMICOLON;
-expr : NUMBER | ID | expr (PLUS|MINUS|MULTIPLY|DIVIDE) expr;
+expr : term ((PLUS | MINUS) term)*;
+term : factor ((MULTIPLY | DIVIDE) factor)*;
+factor : NUMBER | ID | LP expr RP;

@@ -71,5 +71,23 @@ class MyLangParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MyLangParser#term.
+    def enterTerm(self, ctx:MyLangParser.TermContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#term.
+    def exitTerm(self, ctx:MyLangParser.TermContext):
+        pass
+
+
+    # Enter a parse tree produced by MyLangParser#factor.
+    def enterFactor(self, ctx:MyLangParser.FactorContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#factor.
+    def exitFactor(self, ctx:MyLangParser.FactorContext):
+        pass
+
+
 
 del MyLangParser
