@@ -8,7 +8,6 @@ env/
 *.tokens
 *.rules
 *.dfa
-*.g4
 *.java
 *.class
 *.jar
