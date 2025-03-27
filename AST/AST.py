@@ -1,12 +1,32 @@
 from lexer_parser.MyLangParserVisitor import MyLangParserVisitor
 from lexer_parser.MyLangParser import MyLangParser
+from compiler.ir_generator import IRGenerator
 
 class ASTBuilder(MyLangParserVisitor):
+    def __init__(self):
+        super().__init__()
+        self.ir_gen=IRGenerator()
+
     def visitProgram(self, ctx: MyLangParser.ProgramContext):
-        return [self.visit(child) for child in ctx.statement()]
+        ast = [self.visit(child) for child in ctx.statement()]
+        ir_module = self.ir_gen.generate(ast)
+        return ast, ir_module
     
-    def visitDeclaration(self, ctx: MyLangParser.DeclarationContext):
-        return ('declaration', ctx.getChild(0).getText(), ctx.ID().getText())
+    def visitDeclaration(self, ctx):
+        if ctx.expr(): 
+            return (
+                'declaration', 
+                ctx.getChild(0).getText(), 
+                ctx.ID().getText(),         
+                '=',                        
+                self.visit(ctx.expr())      
+            )
+        else:  
+            return (
+                'declaration',
+                ctx.getChild(0).getText(),
+                ctx.ID().getText()
+            )
     
     def visitAssignment(self, ctx: MyLangParser.AssignmentContext):
         return ('assignment', ctx.ID().getText(), self.visit(ctx.expr()))
