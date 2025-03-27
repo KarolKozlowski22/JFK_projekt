@@ -1,5 +1,5 @@
 from llvmlite import ir
-from llvmlite import binding as llvm
+# from llvmlite import binding as llvm
 
 class IRGenerator:
     def __init__(self):
@@ -27,10 +27,9 @@ class IRGenerator:
         self.fmt_float = self._create_unique_global_string("%f\n")
 
     def _create_unique_global_string(self, text):
-        """Tworzy globalny string z unikalną nazwą"""
         text_bytes = bytearray(text.encode() + b'\x00')
         arr_type = ir.ArrayType(ir.IntType(8), len(text_bytes))
-        unique_name = f".str.{hash(text)}"
+        unique_name = f".str.{abs(hash(text))}"
         
         global_str = ir.GlobalVariable(
             self.module,
@@ -38,7 +37,7 @@ class IRGenerator:
             unique_name
         )
         global_str.initializer = ir.Constant(arr_type, text_bytes)
-        global_str.linkage = 'private'
+        global_str.linkage = 'internal'
         global_str.global_constant = True
         return global_str
 
@@ -71,17 +70,23 @@ class IRGenerator:
         var_type = ir.IntType(32) if node[1] == 'int' else ir.FloatType()
         var_name = node[2]
         
-        init_value = ir.Constant(var_type, 0)
+        init_value = ir.Constant(var_type, 0.0 if var_type == ir.FloatType() else 0)
         
         if len(node) > 3 and node[3] == '=':
             init_value = self.evaluate_expr(node[4])
+            if var_type == ir.FloatType() and str(init_value.type) == 'i32':
+                init_value = self.builder.sitofp(init_value, ir.FloatType())
         
-        self.vars[var_name] = ir.GlobalVariable(
-            self.module,
-            var_type,
-            var_name
-        )
-        self.vars[var_name].initializer = init_value
+        # self.vars[var_name] = ir.GlobalVariable(
+        #     self.module,
+        #     var_type,
+        #     var_name
+        # )
+        # self.vars[var_name].initializer = init_value
+        alloca = self.builder.alloca(var_type, name=var_name)
+        self.builder.store(init_value, alloca)
+        self.vars[var_name] = alloca
+
 
     def handle_assignment(self, node):
         var_name = node[1]
@@ -93,10 +98,13 @@ class IRGenerator:
         
         if str(value.type) == 'i32':
             fmt_ptr = self.builder.bitcast(self.fmt_int, ir.PointerType(ir.IntType(8)))
+            self.builder.call(self.printf, [fmt_ptr, value])
         else:
             fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-        
-        self.builder.call(self.printf, [fmt_ptr, value])
+
+            if str(value.type) == 'float':
+                value = self.builder.fpext(value, ir.DoubleType())
+            self.builder.call(self.printf, [fmt_ptr, value])
 
     def handle_read(self, node):
         var_name = node[1]
@@ -115,20 +123,28 @@ class IRGenerator:
         elif isinstance(expr, float):
             return ir.Constant(ir.FloatType(), expr)
         elif isinstance(expr, str): 
-            return self.builder.load(self.vars[expr])
+            loaded = self.builder.load(self.vars[expr])
+            if str(loaded.type) == 'i32' and str(self.vars[expr].type.pointee) == 'float':
+                return self.builder.sitofp(loaded, ir.FloatType())
+            return loaded
         elif isinstance(expr, tuple): 
             left = self.evaluate_expr(expr[1])
             right = self.evaluate_expr(expr[2])
             op = expr[0]
             
+            if left.type != right.type:
+                if str(left.type) == 'i32' and str(right.type) == 'float':
+                    left = self.builder.sitofp(left, ir.FloatType())
+                elif str(left.type) == 'float' and str(right.type) == 'i32':
+                    right = self.builder.sitofp(right, ir.FloatType())
             if op == '+':
-                return self.builder.add(left, right)
+                return self.builder.fadd(left, right) if left.type == ir.FloatType() else self.builder.add(left, right)
             elif op == '-':
-                return self.builder.sub(left, right)
+                return self.builder.fsub(left, right) if left.type == ir.FloatType() else self.builder.sub(left, right)
             elif op == '*':
-                return self.builder.mul(left, right)
+                return self.builder.fmul(left, right) if left.type == ir.FloatType() else self.builder.mul(left, right)
             elif op == '/':
-                if str(left.type) == 'i32':
-                    return self.builder.sdiv(left, right)
-                else:
+                if left.type == ir.FloatType():
                     return self.builder.fdiv(left, right)
+            else:
+                return self.builder.sdiv(left, right)
