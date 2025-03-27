@@ -1,0 +1,1 @@
+[('declaration', 'int', 'first', '=', 10), ('declaration', 'int', 'second', '=', 5), ('assignment', 'first', ('+', 'first', ('*', 'second', 'first'))), ('print', 'first')]
