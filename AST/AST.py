@@ -38,22 +38,22 @@ class ASTBuilder(MyLangParserVisitor):
         return ('read', self.visit(ctx.expr()))
     
     def visitExpr(self, ctx: MyLangParser.ExprContext):
-        if ctx.getChildCount() == 1:
-            return self.visit(ctx.term(0))
-        
-        left = self.visit(ctx.term(0))
-        op = ctx.getChild(1).getText()
-        right = self.visit(ctx.term(1))
-        return (op, left, right)
+        node = self.visit(ctx.term(0))  
+        for i in range(1, ctx.getChildCount(), 2): 
+            op = ctx.getChild(i).getText() 
+            right = self.visit(ctx.term((i+1) // 2))  
+            node = (op, node, right)  
+        return node
+
     
     def visitTerm(self, ctx: MyLangParser.TermContext):
-        if ctx.getChildCount() == 1:
-            return self.visit(ctx.factor(0))
-        
-        left = self.visit(ctx.factor(0))
-        op = ctx.getChild(1).getText()
-        right = self.visit(ctx.factor(1))
-        return (op, left, right)
+        node = self.visit(ctx.factor(0))  
+        for i in range(1, ctx.getChildCount(), 2):  
+            op = ctx.getChild(i).getText()  
+            right = self.visit(ctx.factor((i+1) // 2))  
+            node = (op, node, right) 
+        return node
+
     
     def visitFactor(self, ctx: MyLangParser.FactorContext):
         if ctx.NUMBER():
