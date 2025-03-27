@@ -10,28 +10,29 @@ else:
 
 def serializedATN():
     return [
-        4,1,15,71,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,15,75,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,1,0,4,0,20,8,0,11,0,12,0,21,1,1,1,1,1,1,1,1,3,
-        1,28,8,1,1,2,1,2,1,2,1,2,1,3,1,3,1,3,1,3,1,3,1,4,1,4,1,4,1,4,1,5,
-        1,5,1,5,1,5,1,6,1,6,1,6,5,6,50,8,6,10,6,12,6,53,9,6,1,7,1,7,1,7,
-        5,7,58,8,7,10,7,12,7,61,9,7,1,8,1,8,1,8,1,8,1,8,1,8,3,8,69,8,8,1,
-        8,0,0,9,0,2,4,6,8,10,12,14,16,0,3,1,0,1,2,1,0,7,8,1,0,9,10,69,0,
-        19,1,0,0,0,2,27,1,0,0,0,4,29,1,0,0,0,6,33,1,0,0,0,8,38,1,0,0,0,10,
-        42,1,0,0,0,12,46,1,0,0,0,14,54,1,0,0,0,16,68,1,0,0,0,18,20,3,2,1,
-        0,19,18,1,0,0,0,20,21,1,0,0,0,21,19,1,0,0,0,21,22,1,0,0,0,22,1,1,
-        0,0,0,23,28,3,4,2,0,24,28,3,6,3,0,25,28,3,8,4,0,26,28,3,10,5,0,27,
-        23,1,0,0,0,27,24,1,0,0,0,27,25,1,0,0,0,27,26,1,0,0,0,28,3,1,0,0,
-        0,29,30,7,0,0,0,30,31,5,14,0,0,31,32,5,5,0,0,32,5,1,0,0,0,33,34,
-        5,14,0,0,34,35,5,6,0,0,35,36,3,12,6,0,36,37,5,5,0,0,37,7,1,0,0,0,
-        38,39,5,3,0,0,39,40,3,12,6,0,40,41,5,5,0,0,41,9,1,0,0,0,42,43,5,
-        4,0,0,43,44,3,12,6,0,44,45,5,5,0,0,45,11,1,0,0,0,46,51,3,14,7,0,
-        47,48,7,1,0,0,48,50,3,14,7,0,49,47,1,0,0,0,50,53,1,0,0,0,51,49,1,
-        0,0,0,51,52,1,0,0,0,52,13,1,0,0,0,53,51,1,0,0,0,54,59,3,16,8,0,55,
-        56,7,2,0,0,56,58,3,16,8,0,57,55,1,0,0,0,58,61,1,0,0,0,59,57,1,0,
-        0,0,59,60,1,0,0,0,60,15,1,0,0,0,61,59,1,0,0,0,62,69,5,13,0,0,63,
-        69,5,14,0,0,64,65,5,11,0,0,65,66,3,12,6,0,66,67,5,12,0,0,67,69,1,
-        0,0,0,68,62,1,0,0,0,68,63,1,0,0,0,68,64,1,0,0,0,69,17,1,0,0,0,5,
-        21,27,51,59,68
+        1,28,8,1,1,2,1,2,1,2,1,2,3,2,34,8,2,1,2,1,2,1,3,1,3,1,3,1,3,1,3,
+        1,4,1,4,1,4,1,4,1,5,1,5,1,5,1,5,1,6,1,6,1,6,5,6,54,8,6,10,6,12,6,
+        57,9,6,1,7,1,7,1,7,5,7,62,8,7,10,7,12,7,65,9,7,1,8,1,8,1,8,1,8,1,
+        8,1,8,3,8,73,8,8,1,8,0,0,9,0,2,4,6,8,10,12,14,16,0,3,1,0,1,2,1,0,
+        7,8,1,0,9,10,74,0,19,1,0,0,0,2,27,1,0,0,0,4,29,1,0,0,0,6,37,1,0,
+        0,0,8,42,1,0,0,0,10,46,1,0,0,0,12,50,1,0,0,0,14,58,1,0,0,0,16,72,
+        1,0,0,0,18,20,3,2,1,0,19,18,1,0,0,0,20,21,1,0,0,0,21,19,1,0,0,0,
+        21,22,1,0,0,0,22,1,1,0,0,0,23,28,3,4,2,0,24,28,3,6,3,0,25,28,3,8,
+        4,0,26,28,3,10,5,0,27,23,1,0,0,0,27,24,1,0,0,0,27,25,1,0,0,0,27,
+        26,1,0,0,0,28,3,1,0,0,0,29,30,7,0,0,0,30,33,5,14,0,0,31,32,5,6,0,
+        0,32,34,3,12,6,0,33,31,1,0,0,0,33,34,1,0,0,0,34,35,1,0,0,0,35,36,
+        5,5,0,0,36,5,1,0,0,0,37,38,5,14,0,0,38,39,5,6,0,0,39,40,3,12,6,0,
+        40,41,5,5,0,0,41,7,1,0,0,0,42,43,5,3,0,0,43,44,3,12,6,0,44,45,5,
+        5,0,0,45,9,1,0,0,0,46,47,5,4,0,0,47,48,3,12,6,0,48,49,5,5,0,0,49,
+        11,1,0,0,0,50,55,3,14,7,0,51,52,7,1,0,0,52,54,3,14,7,0,53,51,1,0,
+        0,0,54,57,1,0,0,0,55,53,1,0,0,0,55,56,1,0,0,0,56,13,1,0,0,0,57,55,
+        1,0,0,0,58,63,3,16,8,0,59,60,7,2,0,0,60,62,3,16,8,0,61,59,1,0,0,
+        0,62,65,1,0,0,0,63,61,1,0,0,0,63,64,1,0,0,0,64,15,1,0,0,0,65,63,
+        1,0,0,0,66,73,5,13,0,0,67,73,5,14,0,0,68,69,5,11,0,0,69,70,3,12,
+        6,0,70,71,5,12,0,0,71,73,1,0,0,0,72,66,1,0,0,0,72,67,1,0,0,0,72,
+        68,1,0,0,0,73,17,1,0,0,0,6,21,27,33,55,63,72
     ]
 
 class MyLangParser ( Parser ):
@@ -254,6 +255,13 @@ class MyLangParser ( Parser ):
         def FLOAT(self):
             return self.getToken(MyLangParser.FLOAT, 0)
 
+        def EQUALITY(self):
+            return self.getToken(MyLangParser.EQUALITY, 0)
+
+        def expr(self):
+            return self.getTypedRuleContext(MyLangParser.ExprContext,0)
+
+
         def getRuleIndex(self):
             return MyLangParser.RULE_declaration
 
@@ -290,7 +298,17 @@ class MyLangParser ( Parser ):
                 self.consume()
             self.state = 30
             self.match(MyLangParser.ID)
-            self.state = 31
+            self.state = 33
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==6:
+                self.state = 31
+                self.match(MyLangParser.EQUALITY)
+                self.state = 32
+                self.expr()
+
+
+            self.state = 35
             self.match(MyLangParser.SEMICOLON)
         except RecognitionException as re:
             localctx.exception = re
@@ -347,13 +365,13 @@ class MyLangParser ( Parser ):
         self.enterRule(localctx, 6, self.RULE_assignment)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 33
+            self.state = 37
             self.match(MyLangParser.ID)
-            self.state = 34
+            self.state = 38
             self.match(MyLangParser.EQUALITY)
-            self.state = 35
+            self.state = 39
             self.expr()
-            self.state = 36
+            self.state = 40
             self.match(MyLangParser.SEMICOLON)
         except RecognitionException as re:
             localctx.exception = re
@@ -407,11 +425,11 @@ class MyLangParser ( Parser ):
         self.enterRule(localctx, 8, self.RULE_printFunc)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 38
+            self.state = 42
             self.match(MyLangParser.PRINT)
-            self.state = 39
+            self.state = 43
             self.expr()
-            self.state = 40
+            self.state = 44
             self.match(MyLangParser.SEMICOLON)
         except RecognitionException as re:
             localctx.exception = re
@@ -465,11 +483,11 @@ class MyLangParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_readFunc)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 42
+            self.state = 46
             self.match(MyLangParser.READ)
-            self.state = 43
+            self.state = 47
             self.expr()
-            self.state = 44
+            self.state = 48
             self.match(MyLangParser.SEMICOLON)
         except RecognitionException as re:
             localctx.exception = re
@@ -533,22 +551,22 @@ class MyLangParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 46
+            self.state = 50
             self.term()
-            self.state = 51
+            self.state = 55
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==7 or _la==8:
-                self.state = 47
+                self.state = 51
                 _la = self._input.LA(1)
                 if not(_la==7 or _la==8):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 48
+                self.state = 52
                 self.term()
-                self.state = 53
+                self.state = 57
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -614,22 +632,22 @@ class MyLangParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 54
+            self.state = 58
             self.factor()
-            self.state = 59
+            self.state = 63
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==9 or _la==10:
-                self.state = 55
+                self.state = 59
                 _la = self._input.LA(1)
                 if not(_la==9 or _la==10):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 56
+                self.state = 60
                 self.factor()
-                self.state = 61
+                self.state = 65
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -690,26 +708,26 @@ class MyLangParser ( Parser ):
         localctx = MyLangParser.FactorContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_factor)
         try:
-            self.state = 68
+            self.state = 72
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [13]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 62
+                self.state = 66
                 self.match(MyLangParser.NUMBER)
                 pass
             elif token in [14]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 63
+                self.state = 67
                 self.match(MyLangParser.ID)
                 pass
             elif token in [11]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 64
+                self.state = 68
                 self.match(MyLangParser.LP)
-                self.state = 65
+                self.state = 69
                 self.expr()
-                self.state = 66
+                self.state = 70
                 self.match(MyLangParser.RP)
                 pass
             else:

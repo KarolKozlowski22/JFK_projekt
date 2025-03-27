@@ -6,7 +6,7 @@ program : statement+;
 
 statement : declaration | assignment | printFunc | readFunc;
 
-declaration : (INT | FLOAT) ID SEMICOLON;
+declaration : (INT | FLOAT) ID (EQUALITY expr)? SEMICOLON;
 assignment : ID EQUALITY expr SEMICOLON;
 printFunc : PRINT expr SEMICOLON;
 readFunc : READ expr SEMICOLON;
