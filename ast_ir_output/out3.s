@@ -6,42 +6,30 @@
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:                                # %entry
-	pushq	%rbx
+	pushq	%rax
 	.cfi_def_cfa_offset 16
-	.cfi_offset %rbx, -16
-	movq	x@GOTPCREL(%rip), %rbx
-	movl	$".L.str.-2452015952092396623", %edi
-	movq	%rbx, %rsi
-	xorl	%eax, %eax
-	callq	scanf@PLT
-	movl	(%rbx), %esi
-	movl	$".L.str.-2452015952092396623", %edi
+	movl	$5, (%rsp)
+	movl	$60, 4(%rsp)
+	movl	$.str.3030070452323609682, %edi
+	movl	$60, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	popq	%rbx
+	popq	%rax
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	".L.str.-2452015952092396623",@object # @.str.-2452015952092396623
+	.type	.str.3030070452323609682,@object # @.str.3030070452323609682
 	.section	.rodata,"a",@progbits
-".L.str.-2452015952092396623":
+.str.3030070452323609682:
 	.asciz	"%d\n"
-	.size	".L.str.-2452015952092396623", 4
+	.size	.str.3030070452323609682, 4
 
-	.type	".L.str.-774703926669740791",@object # @.str.-774703926669740791
-".L.str.-774703926669740791":
+	.type	.str.6390100985560808981,@object # @.str.6390100985560808981
+.str.6390100985560808981:
 	.asciz	"%f\n"
-	.size	".L.str.-774703926669740791", 4
-
-	.type	x,@object                       # @x
-	.bss
-	.globl	x
-	.p2align	2, 0x0
-x:
-	.long	0                               # 0x0
-	.size	x, 4
+	.size	.str.6390100985560808981, 4
 
 	.section	".note.GNU-stack","",@progbits

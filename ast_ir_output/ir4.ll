@@ -6,18 +6,17 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.-2452015952092396623" = private constant [4 x i8] c"%d\0a\00"
-@".str.-774703926669740791" = private constant [4 x i8] c"%f\0a\00"
+@".str.3030070452323609682" = internal constant [4 x i8] c"%d\0a\00"
+@".str.6390100985560808981" = internal constant [4 x i8] c"%f\0a\00"
 define void @"main"()
 {
 entry:
-  %".2" = add float 0x4000000000000000, 0x4008000000000000
-  %".3" = mul float 0x4014000000000000, %".2"
-  store float %".3", float* @"x"
-  %".5" = load float, float* @"x"
-  %".6" = bitcast [4 x i8]* @".str.-774703926669740791" to i8*
-  %".7" = call i32 (i8*, ...) @"printf"(i8* %".6", float %".5")
+  %"x" = alloca i32
+  store i32 0, i32* %"x"
+  %".3" = bitcast [4 x i8]* @".str.3030070452323609682" to i8*
+  %".4" = call i32 (i8*, ...) @"scanf"(i8* %".3", i32* %"x")
+  %".5" = load i32, i32* %"x"
+  %".6" = bitcast [4 x i8]* @".str.3030070452323609682" to i8*
+  %".7" = call i32 (i8*, ...) @"printf"(i8* %".6", i32 %".5")
   ret void
 }
-
-@"x" = global float              0x0

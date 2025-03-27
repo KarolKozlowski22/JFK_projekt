@@ -6,17 +6,23 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.-2452015952092396623" = private constant [4 x i8] c"%d\0a\00"
-@".str.-774703926669740791" = private constant [4 x i8] c"%f\0a\00"
+@".str.3030070452323609682" = internal constant [4 x i8] c"%d\0a\00"
+@".str.6390100985560808981" = internal constant [4 x i8] c"%f\0a\00"
 define void @"main"()
 {
 entry:
-  %".2" = bitcast [4 x i8]* @".str.-2452015952092396623" to i8*
-  %".3" = call i32 (i8*, ...) @"scanf"(i8* %".2", i32* @"x")
-  %".4" = load i32, i32* @"x"
-  %".5" = bitcast [4 x i8]* @".str.-2452015952092396623" to i8*
-  %".6" = call i32 (i8*, ...) @"printf"(i8* %".5", i32 %".4")
+  %"first" = alloca i32
+  store i32 10, i32* %"first"
+  %"second" = alloca i32
+  store i32 5, i32* %"second"
+  %".4" = load i32, i32* %"first"
+  %".5" = load i32, i32* %"second"
+  %".6" = load i32, i32* %"first"
+  %".7" = mul i32 %".5", %".6"
+  %".8" = add i32 %".4", %".7"
+  store i32 %".8", i32* %"first"
+  %".10" = load i32, i32* %"first"
+  %".11" = bitcast [4 x i8]* @".str.3030070452323609682" to i8*
+  %".12" = call i32 (i8*, ...) @"printf"(i8* %".11", i32 %".10")
   ret void
 }
-
-@"x" = global i32 0

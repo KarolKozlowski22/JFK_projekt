@@ -1,6 +1,11 @@
 	.text
-	.file	"ir2.ll"
-	.globl	main                            # -- Begin function main
+	.file	"ir5.ll"
+	.section	.rodata.cst8,"aM",@progbits,8
+	.p2align	3, 0x0                          # -- Begin function main
+.LCPI0_0:
+	.quad	0x4029000000000000              # double 12.5
+	.text
+	.globl	main
 	.p2align	4, 0x90
 	.type	main,@function
 main:                                   # @main
@@ -8,10 +13,10 @@ main:                                   # @main
 # %bb.0:                                # %entry
 	pushq	%rax
 	.cfi_def_cfa_offset 16
-	movl	$42, 4(%rsp)
-	movl	$.str.3030070452323609682, %edi
-	movl	$42, %esi
-	xorl	%eax, %eax
+	movl	$1095237632, 4(%rsp)            # imm = 0x41480000
+	movsd	.LCPI0_0(%rip), %xmm0           # xmm0 = [1.25E+1,0.0E+0]
+	movl	$.str.6390100985560808981, %edi
+	movb	$1, %al
 	callq	printf@PLT
 	popq	%rax
 	.cfi_def_cfa_offset 8

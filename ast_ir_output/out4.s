@@ -1,5 +1,5 @@
 	.text
-	.file	"ir2.ll"
+	.file	"ir4.ll"
 	.globl	main                            # -- Begin function main
 	.p2align	4, 0x90
 	.type	main,@function
@@ -8,9 +8,13 @@ main:                                   # @main
 # %bb.0:                                # %entry
 	pushq	%rax
 	.cfi_def_cfa_offset 16
-	movl	$42, 4(%rsp)
+	movl	$0, 4(%rsp)
+	leaq	4(%rsp), %rsi
 	movl	$.str.3030070452323609682, %edi
-	movl	$42, %esi
+	xorl	%eax, %eax
+	callq	scanf@PLT
+	movl	4(%rsp), %esi
+	movl	$.str.3030070452323609682, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	popq	%rax

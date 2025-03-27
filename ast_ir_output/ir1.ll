@@ -6,15 +6,13 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.-2452015952092396623" = private constant [4 x i8] c"%d\0a\00"
-@".str.-774703926669740791" = private constant [4 x i8] c"%f\0a\00"
+@".str.3030070452323609682" = internal constant [4 x i8] c"%d\0a\00"
+@".str.6390100985560808981" = internal constant [4 x i8] c"%f\0a\00"
 define void @"main"()
 {
 entry:
-  %".2" = load i32, i32* @"x"
-  %".3" = bitcast [4 x i8]* @".str.-2452015952092396623" to i8*
-  %".4" = call i32 (i8*, ...) @"printf"(i8* %".3", i32 %".2")
+  %".2" = bitcast [4 x i8]* @".str.6390100985560808981" to i8*
+  %".3" = fpext float 0x4039666660000000 to double
+  %".4" = call i32 (i8*, ...) @"printf"(i8* %".2", double %".3")
   ret void
 }
-
-@"x" = global i32 42
