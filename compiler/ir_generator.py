@@ -153,28 +153,25 @@ class IRGenerator:
             left_val = self.evaluate_expr(expr[1])
             right_val = self.evaluate_expr(expr[2])
 
-            # Konwersja typów operandów
             if left_val.type != right_val.type:
                 if isinstance(left_val.type, ir.IntType) and isinstance(right_val.type, ir.FloatType):
                     left_val = self.builder.sitofp(left_val, ir.FloatType())  # int -> float
                 elif isinstance(left_val.type, ir.FloatType) and isinstance(right_val.type, ir.IntType):
                     right_val = self.builder.sitofp(right_val, ir.FloatType())  # int -> float
 
-            # Obsługa operatorów logicznych
             if op in ['&&', '||', '^']:
                 if str(left_val.type) != 'i32':
                     left_val = self.builder.trunc(left_val, ir.IntType(1))
                 if str(right_val.type) != 'i32':
                     right_val = self.builder.trunc(right_val, ir.IntType(1))
                 
-                if op == '&&':  # AND
+                if op == '&&':  
                     return self.builder.and_(left_val, right_val)
-                elif op == '||':  # OR
+                elif op == '||':  
                     return self.builder.or_(left_val, right_val)
-                elif op == '^':  # XOR
+                elif op == '^':  
                     return self.builder.xor(left_val, right_val)
 
-            # Obsługa operatorów arytmetycznych
             if op == '+':
                 return self.builder.fadd(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.add(left_val, right_val)
             elif op == '-':
