@@ -1,3 +1,2 @@
-int x;
-read x;
-print x;
+float64 a = 5.5;
+print a;

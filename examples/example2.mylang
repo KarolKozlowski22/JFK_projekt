@@ -1,4 +1,4 @@
 int b = 7 / 2; 
-float c = 7.0 / 2; 
+float32 c = 7.0 / 2; 
 print b;
 print c;

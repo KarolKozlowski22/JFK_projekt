@@ -10,7 +10,7 @@ main:                                   # @main
 	.cfi_def_cfa_offset 16
 	movl	$0, 4(%rsp)
 	movl	$1, (%rsp)
-	movl	$.str.7951315541544645107, %edi
+	movl	$.str.3948252993100881646, %edi
 	movl	$1, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
@@ -21,15 +21,15 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.7951315541544645107,@object # @.str.7951315541544645107
+	.type	.str.3948252993100881646,@object # @.str.3948252993100881646
 	.section	.rodata,"a",@progbits
-.str.7951315541544645107:
+.str.3948252993100881646:
 	.asciz	"%d"
-	.size	.str.7951315541544645107, 3
+	.size	.str.3948252993100881646, 3
 
-	.type	.str.6650026928202722788,@object # @.str.6650026928202722788
-.str.6650026928202722788:
+	.type	.str.1444584550978747635,@object # @.str.1444584550978747635
+.str.1444584550978747635:
 	.asciz	"%f"
-	.size	.str.6650026928202722788, 3
+	.size	.str.1444584550978747635, 3
 
 	.section	".note.GNU-stack","",@progbits

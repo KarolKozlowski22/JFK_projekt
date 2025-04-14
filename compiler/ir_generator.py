@@ -66,15 +66,31 @@ class IRGenerator:
             self.handle_read(node)
 
     def handle_declaration(self, node):
-        var_type = ir.IntType(32) if node[1] == 'int' else ir.FloatType()
+        var_type = None
+        if node[1] == 'int':
+            var_type = ir.IntType(32)
+        elif node[1] == 'float32':
+            var_type = ir.FloatType()
+        elif node[1] == 'float64':
+            var_type = ir.DoubleType()
         var_name = node[2]
         
-        init_value = ir.Constant(var_type, 0.0 if var_type == ir.FloatType() else 0)
-        
+        init_value = ir.Constant(var_type, 0.0 if isinstance(var_type, (ir.FloatType, ir.DoubleType)) else 0)
+
         if len(node) > 3 and node[3] == '=':
             init_value = self.evaluate_expr(node[4])
-            if var_type == ir.FloatType() and str(init_value.type) == 'i32':
-                init_value = self.builder.sitofp(init_value, ir.FloatType())
+            if isinstance(var_type, ir.FloatType) and str(init_value.type) == 'double':
+                init_value = self.builder.fptrunc(init_value, ir.FloatType())  
+            elif isinstance(var_type, ir.DoubleType) and str(init_value.type) == 'float':
+                init_value = self.builder.fpext(init_value, ir.DoubleType())  
+            elif isinstance(var_type, ir.FloatType) and str(init_value.type) == 'i32':
+                init_value = self.builder.sitofp(init_value, ir.FloatType())  
+            elif isinstance(var_type, ir.DoubleType) and str(init_value.type) == 'i32':
+                init_value = self.builder.sitofp(init_value, ir.DoubleType())  
+        # if len(node) > 3 and node[3] == '=':
+        #     init_value = self.evaluate_expr(node[4])
+        #     if var_type == ir.FloatType() and str(init_value.type) == 'i32':
+        #         init_value = self.builder.sitofp(init_value, ir.FloatType())
         
         alloca = self.builder.alloca(var_type, name=var_name)
         self.builder.store(init_value, alloca)

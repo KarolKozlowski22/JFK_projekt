@@ -15,7 +15,7 @@ main:                                   # @main
 	.cfi_def_cfa_offset 16
 	movl	$1092616192, 4(%rsp)            # imm = 0x41200000
 	movsd	.LCPI0_0(%rip), %xmm0           # xmm0 = [1.0E+1,0.0E+0]
-	movl	$.str.6650026928202722788, %edi
+	movl	$.str.1444584550978747635, %edi
 	movb	$1, %al
 	callq	printf@PLT
 	popq	%rax
@@ -25,15 +25,15 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.7951315541544645107,@object # @.str.7951315541544645107
+	.type	.str.3948252993100881646,@object # @.str.3948252993100881646
 	.section	.rodata,"a",@progbits
-.str.7951315541544645107:
+.str.3948252993100881646:
 	.asciz	"%d"
-	.size	.str.7951315541544645107, 3
+	.size	.str.3948252993100881646, 3
 
-	.type	.str.6650026928202722788,@object # @.str.6650026928202722788
-.str.6650026928202722788:
+	.type	.str.1444584550978747635,@object # @.str.1444584550978747635
+.str.1444584550978747635:
 	.asciz	"%f"
-	.size	.str.6650026928202722788, 3
+	.size	.str.1444584550978747635, 3
 
 	.section	".note.GNU-stack","",@progbits

@@ -1,7 +1,8 @@
 lexer grammar MyLangLexer;
 
 INT : 'int';
-FLOAT : 'float';
+FLOAT32: 'float32';
+FLOAT64 : 'float64';
 PRINT : 'print';
 READ : 'read';
 

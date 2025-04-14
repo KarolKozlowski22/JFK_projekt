@@ -1,1 +1,1 @@
-[('declaration', 'float', 'a', '=', ('+', 10, ('*', 3.5, 2))), ('print', 'a')]
+[('declaration', 'float32', 'a', '=', ('+', 10, ('*', 3.5, 2))), ('print', 'a')]

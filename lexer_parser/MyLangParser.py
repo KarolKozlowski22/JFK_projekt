@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,19,113,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,20,113,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,1,0,4,0,24,8,0,11,0,12,0,25,
         1,1,1,1,1,1,1,1,3,1,32,8,1,1,2,1,2,1,2,1,2,3,2,38,8,2,1,2,1,2,1,
         3,1,3,1,3,1,3,1,3,1,4,1,4,1,4,1,4,1,5,1,5,1,5,1,5,1,6,1,6,1,7,1,
@@ -18,34 +18,34 @@ def serializedATN():
         8,7,10,7,12,7,75,9,7,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,5,8,86,
         8,8,10,8,12,8,89,9,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,5,9,100,
         8,9,10,9,12,9,103,9,9,1,10,1,10,1,10,1,10,1,10,1,10,3,10,111,8,10,
-        1,10,0,3,14,16,18,11,0,2,4,6,8,10,12,14,16,18,20,0,1,1,0,1,2,116,
+        1,10,0,3,14,16,18,11,0,2,4,6,8,10,12,14,16,18,20,0,1,1,0,1,3,116,
         0,23,1,0,0,0,2,31,1,0,0,0,4,33,1,0,0,0,6,41,1,0,0,0,8,46,1,0,0,0,
         10,50,1,0,0,0,12,54,1,0,0,0,14,60,1,0,0,0,16,76,1,0,0,0,18,90,1,
         0,0,0,20,110,1,0,0,0,22,24,3,2,1,0,23,22,1,0,0,0,24,25,1,0,0,0,25,
         23,1,0,0,0,25,26,1,0,0,0,26,1,1,0,0,0,27,32,3,4,2,0,28,32,3,6,3,
         0,29,32,3,8,4,0,30,32,3,10,5,0,31,27,1,0,0,0,31,28,1,0,0,0,31,29,
-        1,0,0,0,31,30,1,0,0,0,32,3,1,0,0,0,33,34,7,0,0,0,34,37,5,18,0,0,
-        35,36,5,10,0,0,36,38,3,12,6,0,37,35,1,0,0,0,37,38,1,0,0,0,38,39,
-        1,0,0,0,39,40,5,9,0,0,40,5,1,0,0,0,41,42,5,18,0,0,42,43,5,10,0,0,
-        43,44,3,12,6,0,44,45,5,9,0,0,45,7,1,0,0,0,46,47,5,3,0,0,47,48,3,
-        12,6,0,48,49,5,9,0,0,49,9,1,0,0,0,50,51,5,4,0,0,51,52,3,12,6,0,52,
-        53,5,9,0,0,53,11,1,0,0,0,54,55,3,14,7,0,55,13,1,0,0,0,56,57,6,7,
-        -1,0,57,58,5,8,0,0,58,61,3,14,7,2,59,61,3,16,8,0,60,56,1,0,0,0,60,
-        59,1,0,0,0,61,73,1,0,0,0,62,63,10,5,0,0,63,64,5,5,0,0,64,72,3,14,
-        7,6,65,66,10,4,0,0,66,67,5,6,0,0,67,72,3,14,7,5,68,69,10,3,0,0,69,
-        70,5,7,0,0,70,72,3,14,7,4,71,62,1,0,0,0,71,65,1,0,0,0,71,68,1,0,
-        0,0,72,75,1,0,0,0,73,71,1,0,0,0,73,74,1,0,0,0,74,15,1,0,0,0,75,73,
-        1,0,0,0,76,77,6,8,-1,0,77,78,3,18,9,0,78,87,1,0,0,0,79,80,10,3,0,
-        0,80,81,5,11,0,0,81,86,3,18,9,0,82,83,10,2,0,0,83,84,5,12,0,0,84,
-        86,3,18,9,0,85,79,1,0,0,0,85,82,1,0,0,0,86,89,1,0,0,0,87,85,1,0,
-        0,0,87,88,1,0,0,0,88,17,1,0,0,0,89,87,1,0,0,0,90,91,6,9,-1,0,91,
-        92,3,20,10,0,92,101,1,0,0,0,93,94,10,3,0,0,94,95,5,13,0,0,95,100,
-        3,20,10,0,96,97,10,2,0,0,97,98,5,14,0,0,98,100,3,20,10,0,99,93,1,
-        0,0,0,99,96,1,0,0,0,100,103,1,0,0,0,101,99,1,0,0,0,101,102,1,0,0,
-        0,102,19,1,0,0,0,103,101,1,0,0,0,104,111,5,17,0,0,105,111,5,18,0,
-        0,106,107,5,15,0,0,107,108,3,12,6,0,108,109,5,16,0,0,109,111,1,0,
-        0,0,110,104,1,0,0,0,110,105,1,0,0,0,110,106,1,0,0,0,111,21,1,0,0,
-        0,11,25,31,37,60,71,73,85,87,99,101,110
+        1,0,0,0,31,30,1,0,0,0,32,3,1,0,0,0,33,34,7,0,0,0,34,37,5,19,0,0,
+        35,36,5,11,0,0,36,38,3,12,6,0,37,35,1,0,0,0,37,38,1,0,0,0,38,39,
+        1,0,0,0,39,40,5,10,0,0,40,5,1,0,0,0,41,42,5,19,0,0,42,43,5,11,0,
+        0,43,44,3,12,6,0,44,45,5,10,0,0,45,7,1,0,0,0,46,47,5,4,0,0,47,48,
+        3,12,6,0,48,49,5,10,0,0,49,9,1,0,0,0,50,51,5,5,0,0,51,52,3,12,6,
+        0,52,53,5,10,0,0,53,11,1,0,0,0,54,55,3,14,7,0,55,13,1,0,0,0,56,57,
+        6,7,-1,0,57,58,5,9,0,0,58,61,3,14,7,2,59,61,3,16,8,0,60,56,1,0,0,
+        0,60,59,1,0,0,0,61,73,1,0,0,0,62,63,10,5,0,0,63,64,5,6,0,0,64,72,
+        3,14,7,6,65,66,10,4,0,0,66,67,5,7,0,0,67,72,3,14,7,5,68,69,10,3,
+        0,0,69,70,5,8,0,0,70,72,3,14,7,4,71,62,1,0,0,0,71,65,1,0,0,0,71,
+        68,1,0,0,0,72,75,1,0,0,0,73,71,1,0,0,0,73,74,1,0,0,0,74,15,1,0,0,
+        0,75,73,1,0,0,0,76,77,6,8,-1,0,77,78,3,18,9,0,78,87,1,0,0,0,79,80,
+        10,3,0,0,80,81,5,12,0,0,81,86,3,18,9,0,82,83,10,2,0,0,83,84,5,13,
+        0,0,84,86,3,18,9,0,85,79,1,0,0,0,85,82,1,0,0,0,86,89,1,0,0,0,87,
+        85,1,0,0,0,87,88,1,0,0,0,88,17,1,0,0,0,89,87,1,0,0,0,90,91,6,9,-1,
+        0,91,92,3,20,10,0,92,101,1,0,0,0,93,94,10,3,0,0,94,95,5,14,0,0,95,
+        100,3,20,10,0,96,97,10,2,0,0,97,98,5,15,0,0,98,100,3,20,10,0,99,
+        93,1,0,0,0,99,96,1,0,0,0,100,103,1,0,0,0,101,99,1,0,0,0,101,102,
+        1,0,0,0,102,19,1,0,0,0,103,101,1,0,0,0,104,111,5,18,0,0,105,111,
+        5,19,0,0,106,107,5,16,0,0,107,108,3,12,6,0,108,109,5,17,0,0,109,
+        111,1,0,0,0,110,104,1,0,0,0,110,105,1,0,0,0,110,106,1,0,0,0,111,
+        21,1,0,0,0,11,25,31,37,60,71,73,85,87,99,101,110
     ]
 
 class MyLangParser ( Parser ):
@@ -58,14 +58,14 @@ class MyLangParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'int'", "'float'", "'print'", "'read'", 
-                     "'&&'", "'||'", "'^'", "'!'", "';'", "'='", "'+'", 
-                     "'-'", "'*'", "'/'", "'('", "')'" ]
+    literalNames = [ "<INVALID>", "'int'", "'float32'", "'float64'", "'print'", 
+                     "'read'", "'&&'", "'||'", "'^'", "'!'", "';'", "'='", 
+                     "'+'", "'-'", "'*'", "'/'", "'('", "')'" ]
 
-    symbolicNames = [ "<INVALID>", "INT", "FLOAT", "PRINT", "READ", "AND", 
-                      "OR", "XOR", "NEG", "SEMICOLON", "EQUALITY", "PLUS", 
-                      "MINUS", "MULTIPLY", "DIVIDE", "LP", "RP", "NUMBER", 
-                      "ID", "WS" ]
+    symbolicNames = [ "<INVALID>", "INT", "FLOAT32", "FLOAT64", "PRINT", 
+                      "READ", "AND", "OR", "XOR", "NEG", "SEMICOLON", "EQUALITY", 
+                      "PLUS", "MINUS", "MULTIPLY", "DIVIDE", "LP", "RP", 
+                      "NUMBER", "ID", "WS" ]
 
     RULE_program = 0
     RULE_statement = 1
@@ -85,24 +85,25 @@ class MyLangParser ( Parser ):
 
     EOF = Token.EOF
     INT=1
-    FLOAT=2
-    PRINT=3
-    READ=4
-    AND=5
-    OR=6
-    XOR=7
-    NEG=8
-    SEMICOLON=9
-    EQUALITY=10
-    PLUS=11
-    MINUS=12
-    MULTIPLY=13
-    DIVIDE=14
-    LP=15
-    RP=16
-    NUMBER=17
-    ID=18
-    WS=19
+    FLOAT32=2
+    FLOAT64=3
+    PRINT=4
+    READ=5
+    AND=6
+    OR=7
+    XOR=8
+    NEG=9
+    SEMICOLON=10
+    EQUALITY=11
+    PLUS=12
+    MINUS=13
+    MULTIPLY=14
+    DIVIDE=15
+    LP=16
+    RP=17
+    NUMBER=18
+    ID=19
+    WS=20
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -163,7 +164,7 @@ class MyLangParser ( Parser ):
                 self.state = 25 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 262174) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 524350) != 0)):
                     break
 
         except RecognitionException as re:
@@ -226,22 +227,22 @@ class MyLangParser ( Parser ):
             self.state = 31
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [1, 2]:
+            if token in [1, 2, 3]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 27
                 self.declaration()
                 pass
-            elif token in [18]:
+            elif token in [19]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 28
                 self.assignment()
                 pass
-            elif token in [3]:
+            elif token in [4]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 29
                 self.printFunc()
                 pass
-            elif token in [4]:
+            elif token in [5]:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 30
                 self.readFunc()
@@ -274,8 +275,11 @@ class MyLangParser ( Parser ):
         def INT(self):
             return self.getToken(MyLangParser.INT, 0)
 
-        def FLOAT(self):
-            return self.getToken(MyLangParser.FLOAT, 0)
+        def FLOAT32(self):
+            return self.getToken(MyLangParser.FLOAT32, 0)
+
+        def FLOAT64(self):
+            return self.getToken(MyLangParser.FLOAT64, 0)
 
         def EQUALITY(self):
             return self.getToken(MyLangParser.EQUALITY, 0)
@@ -313,7 +317,7 @@ class MyLangParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 33
             _la = self._input.LA(1)
-            if not(_la==1 or _la==2):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 14) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -323,7 +327,7 @@ class MyLangParser ( Parser ):
             self.state = 37
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==10:
+            if _la==11:
                 self.state = 35
                 self.match(MyLangParser.EQUALITY)
                 self.state = 36
@@ -629,13 +633,13 @@ class MyLangParser ( Parser ):
             self.state = 60
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [8]:
+            if token in [9]:
                 self.state = 57
                 self.match(MyLangParser.NEG)
                 self.state = 58
                 self.logicalExpr(2)
                 pass
-            elif token in [15, 17, 18]:
+            elif token in [16, 18, 19]:
                 self.state = 59
                 self.arithmeticExpr(0)
                 pass
@@ -964,17 +968,17 @@ class MyLangParser ( Parser ):
             self.state = 110
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [17]:
+            if token in [18]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 104
                 self.match(MyLangParser.NUMBER)
                 pass
-            elif token in [18]:
+            elif token in [19]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 105
                 self.match(MyLangParser.ID)
                 pass
-            elif token in [15]:
+            elif token in [16]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 106
                 self.match(MyLangParser.LP)

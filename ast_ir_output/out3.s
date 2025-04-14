@@ -13,16 +13,16 @@ main:                                   # @main
 	movl	$0, 12(%rsp)
 	movl	$1, 8(%rsp)
 	movl	$1, 4(%rsp)
-	movl	$.str.7951315541544645107, %edi
+	movl	$.str.3948252993100881646, %edi
 	xorl	%esi, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	movl	8(%rsp), %esi
-	movl	$.str.7951315541544645107, %edi
+	movl	$.str.3948252993100881646, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	movl	4(%rsp), %esi
-	movl	$.str.7951315541544645107, %edi
+	movl	$.str.3948252993100881646, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	addq	$24, %rsp
@@ -32,15 +32,15 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.7951315541544645107,@object # @.str.7951315541544645107
+	.type	.str.3948252993100881646,@object # @.str.3948252993100881646
 	.section	.rodata,"a",@progbits
-.str.7951315541544645107:
+.str.3948252993100881646:
 	.asciz	"%d"
-	.size	.str.7951315541544645107, 3
+	.size	.str.3948252993100881646, 3
 
-	.type	.str.6650026928202722788,@object # @.str.6650026928202722788
-.str.6650026928202722788:
+	.type	.str.1444584550978747635,@object # @.str.1444584550978747635
+.str.1444584550978747635:
 	.asciz	"%f"
-	.size	.str.6650026928202722788, 3
+	.size	.str.1444584550978747635, 3
 
 	.section	".note.GNU-stack","",@progbits

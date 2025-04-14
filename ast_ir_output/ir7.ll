@@ -6,8 +6,8 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.7951315541544645107" = internal constant [3 x i8] c"%d\00"
-@".str.6650026928202722788" = internal constant [3 x i8] c"%f\00"
+@".str.3948252993100881646" = internal constant [3 x i8] c"%d\00"
+@".str.1444584550978747635" = internal constant [3 x i8] c"%f\00"
 define void @"main"()
 {
 entry:
@@ -19,7 +19,7 @@ entry:
   %"x" = alloca i32
   store i32 %".6", i32* %"x"
   %".8" = load i32, i32* %"x"
-  %".9" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
+  %".9" = bitcast [3 x i8]* @".str.3948252993100881646" to i8*
   %".10" = call i32 (i8*, ...) @"printf"(i8* %".9", i32 %".8")
   ret void
 }
