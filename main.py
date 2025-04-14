@@ -13,10 +13,6 @@ def main():
         tokens= CommonTokenStream(lexer)
         parser = MyLangParser(tokens)
         tree = parser.program()
-
-        # print("Parse Tree:")
-        # print(tree.toStringTree(recog=parser))
-        
         ast_builder = ASTBuilder()
         ast, ir_module = ast_builder.visit(tree)
 
@@ -24,8 +20,6 @@ def main():
         save_ir_module(ir_module, it)
         compile_ir(it)
         it+=1
-
-
-
+        
 if __name__ == '__main__':
     main()

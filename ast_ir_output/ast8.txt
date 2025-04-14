@@ -1,0 +1,1 @@
+[('declaration', 'int', 'b', '=', ('/', 7, 2)), ('declaration', 'float', 'c', '=', ('/', 7.0, 2)), ('print', 'b'), ('print', 'c')]

@@ -38,21 +38,38 @@ class ASTBuilder(MyLangParserVisitor):
         return ('read', self.visit(ctx.expr()))
     
     def visitExpr(self, ctx: MyLangParser.ExprContext):
-        node = self.visit(ctx.term(0))  
-        for i in range(1, ctx.getChildCount(), 2): 
-            op = ctx.getChild(i).getText() 
-            right = self.visit(ctx.term((i+1) // 2))  
-            node = (op, node, right)  
-        return node
-
+        return self.visit(ctx.logicalExpr())
     
+    def visitLogicalExpr(self, ctx: MyLangParser.LogicalExprContext):
+        if ctx.getChildCount() == 1: 
+            return self.visit(ctx.arithmeticExpr())
+        elif ctx.getChildCount() == 2:  
+            op = ctx.getChild(0).getText()  
+            right = self.visit(ctx.getChild(1))
+            return (op, right)
+        elif ctx.getChildCount() == 3:  
+            left = self.visit(ctx.getChild(0))
+            op = ctx.getChild(1).getText()  
+            right = self.visit(ctx.getChild(2))
+            return (op, left, right)
+    
+    def visitArithmeticExpr(self, ctx: MyLangParser.ArithmeticExprContext):
+        if ctx.getChildCount() == 1:  
+            return self.visit(ctx.term())
+        elif ctx.getChildCount() == 3:  
+            left = self.visit(ctx.getChild(0))
+            op = ctx.getChild(1).getText()  
+            right = self.visit(ctx.getChild(2))
+            return (op, left, right)
+
     def visitTerm(self, ctx: MyLangParser.TermContext):
-        node = self.visit(ctx.factor(0))  
-        for i in range(1, ctx.getChildCount(), 2):  
-            op = ctx.getChild(i).getText()  
-            right = self.visit(ctx.factor((i+1) // 2))  
-            node = (op, node, right) 
-        return node
+        if ctx.getChildCount() == 1: 
+            return self.visit(ctx.factor())
+        elif ctx.getChildCount() == 3:  
+            left = self.visit(ctx.getChild(0))
+            op = ctx.getChild(1).getText() 
+            right = self.visit(ctx.getChild(2))
+            return (op, left, right)
 
     
     def visitFactor(self, ctx: MyLangParser.FactorContext):
@@ -60,5 +77,9 @@ class ASTBuilder(MyLangParserVisitor):
             return float(ctx.NUMBER().getText()) if '.' in ctx.NUMBER().getText() else int(ctx.NUMBER().getText())
         elif ctx.ID():
             return ctx.ID().getText()
+        elif ctx.LP():
+            return self.visit(ctx.expr())
+        elif ctx.NEG():
+            return ('NEG', self.visit(ctx.expr()))
         else:
             return self.visit(ctx.expr())

@@ -1,1 +1,1 @@
-[('declaration', 'int', 'first', '=', 10), ('declaration', 'int', 'second', '=', 5), ('assignment', 'first', ('+', 'first', ('*', 'second', 'first'))), ('print', 'first')]
+[('declaration', 'int', 'a', '=', 1), ('declaration', 'int', 'b', '=', 0), ('declaration', 'int', 'c', '=', ('&&', 'a', 'b')), ('declaration', 'int', 'd', '=', ('||', 'a', 'b')), ('declaration', 'int', 'e', '=', ('^', 'a', 'b')), ('print', 'c'), ('print', 'd'), ('print', 'e')]

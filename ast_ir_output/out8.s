@@ -1,31 +1,25 @@
 	.text
-	.file	"ir3.ll"
+	.file	"ir8.ll"
 	.globl	main                            # -- Begin function main
 	.p2align	4, 0x90
 	.type	main,@function
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:                                # %entry
-	subq	$24, %rsp
-	.cfi_def_cfa_offset 32
-	movl	$1, 20(%rsp)
-	movl	$0, 16(%rsp)
-	movl	$0, 12(%rsp)
-	movl	$1, 8(%rsp)
-	movl	$1, 4(%rsp)
+	pushq	%rax
+	.cfi_def_cfa_offset 16
+	movl	$3, 4(%rsp)
+	movl	$1080033280, (%rsp)             # imm = 0x40600000
 	movl	$.str.7951315541544645107, %edi
-	xorl	%esi, %esi
+	movl	$3, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	8(%rsp), %esi
-	movl	$.str.7951315541544645107, %edi
-	xorl	%eax, %eax
+	movss	(%rsp), %xmm0                   # xmm0 = mem[0],zero,zero,zero
+	cvtss2sd	%xmm0, %xmm0
+	movl	$.str.6650026928202722788, %edi
+	movb	$1, %al
 	callq	printf@PLT
-	movl	4(%rsp), %esi
-	movl	$.str.7951315541544645107, %edi
-	xorl	%eax, %eax
-	callq	printf@PLT
-	addq	$24, %rsp
+	popq	%rax
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end0:

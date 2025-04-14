@@ -1,5 +1,4 @@
 from llvmlite import ir
-# from llvmlite import binding as llvm
 
 class IRGenerator:
     def __init__(self):
@@ -23,8 +22,8 @@ class IRGenerator:
             "scanf"
         )
         
-        self.fmt_int = self._create_unique_global_string("%d\n")
-        self.fmt_float = self._create_unique_global_string("%f\n")
+        self.fmt_int = self._create_unique_global_string("%d")
+        self.fmt_float = self._create_unique_global_string("%f")
 
     def _create_unique_global_string(self, text):
         text_bytes = bytearray(text.encode() + b'\x00')
@@ -77,12 +76,6 @@ class IRGenerator:
             if var_type == ir.FloatType() and str(init_value.type) == 'i32':
                 init_value = self.builder.sitofp(init_value, ir.FloatType())
         
-        # self.vars[var_name] = ir.GlobalVariable(
-        #     self.module,
-        #     var_type,
-        #     var_name
-        # )
-        # self.vars[var_name].initializer = init_value
         alloca = self.builder.alloca(var_type, name=var_name)
         self.builder.store(init_value, alloca)
         self.vars[var_name] = alloca
@@ -114,37 +107,65 @@ class IRGenerator:
             fmt_ptr = self.builder.bitcast(self.fmt_int, ir.PointerType(ir.IntType(8)))
         else:
             fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-        
+        fflush = ir.Function(
+            self.module,
+            ir.FunctionType(ir.IntType(32), [ir.PointerType(ir.IntType(8))]),
+            "fflush"
+        )
+        self.builder.call(fflush, [ir.Constant(ir.PointerType(ir.IntType(8)), None)])
         self.builder.call(self.scanf, [fmt_ptr, var])
 
     def evaluate_expr(self, expr):
-        if isinstance(expr, int):
-            return ir.Constant(ir.IntType(32), expr)
-        elif isinstance(expr, float):
-            return ir.Constant(ir.FloatType(), expr)
-        elif isinstance(expr, str): 
-            loaded = self.builder.load(self.vars[expr])
-            if str(loaded.type) == 'i32' and str(self.vars[expr].type.pointee) == 'float':
-                return self.builder.sitofp(loaded, ir.FloatType())
-            return loaded
-        elif isinstance(expr, tuple): 
-            left = self.evaluate_expr(expr[1])
-            right = self.evaluate_expr(expr[2])
-            op = expr[0]
-            
-            if left.type != right.type:
-                if str(left.type) == 'i32' and str(right.type) == 'float':
-                    left = self.builder.sitofp(left, ir.FloatType())
-                elif str(left.type) == 'float' and str(right.type) == 'i32':
-                    right = self.builder.sitofp(right, ir.FloatType())
-            if op == '+':
-                return self.builder.fadd(left, right) if left.type == ir.FloatType() else self.builder.add(left, right)
-            elif op == '-':
-                return self.builder.fsub(left, right) if left.type == ir.FloatType() else self.builder.sub(left, right)
-            elif op == '*':
-                return self.builder.fmul(left, right) if left.type == ir.FloatType() else self.builder.mul(left, right)
-            elif op == '/':
-                if left.type == ir.FloatType():
-                    return self.builder.fdiv(left, right)
+        if isinstance(expr, (int, float)):
+            if isinstance(expr, int):
+                return ir.Constant(ir.IntType(32), expr)
             else:
-                return self.builder.sdiv(left, right)
+                return ir.Constant(ir.FloatType(), expr)
+        
+        elif isinstance(expr, str):
+            if expr not in self.vars:
+                raise ValueError(f"Unknown variable: {expr}")
+            return self.builder.load(self.vars[expr])
+        
+        elif isinstance(expr, tuple):
+            op = expr[0]
+            if op == '!':
+                val = self.evaluate_expr(expr[1])
+                bool_val = self.builder.icmp_unsigned('!=', val, ir.Constant(val.type, 0))
+                result = self.builder.xor(bool_val, ir.Constant(ir.IntType(1), 1))
+                return self.builder.zext(result, ir.IntType(32))
+            left_val = self.evaluate_expr(expr[1])
+            right_val = self.evaluate_expr(expr[2])
+
+            # Konwersja typów operandów
+            if left_val.type != right_val.type:
+                if isinstance(left_val.type, ir.IntType) and isinstance(right_val.type, ir.FloatType):
+                    left_val = self.builder.sitofp(left_val, ir.FloatType())  # int -> float
+                elif isinstance(left_val.type, ir.FloatType) and isinstance(right_val.type, ir.IntType):
+                    right_val = self.builder.sitofp(right_val, ir.FloatType())  # int -> float
+
+            # Obsługa operatorów logicznych
+            if op in ['&&', '||', '^']:
+                if str(left_val.type) != 'i32':
+                    left_val = self.builder.trunc(left_val, ir.IntType(1))
+                if str(right_val.type) != 'i32':
+                    right_val = self.builder.trunc(right_val, ir.IntType(1))
+                
+                if op == '&&':  # AND
+                    return self.builder.and_(left_val, right_val)
+                elif op == '||':  # OR
+                    return self.builder.or_(left_val, right_val)
+                elif op == '^':  # XOR
+                    return self.builder.xor(left_val, right_val)
+
+            # Obsługa operatorów arytmetycznych
+            if op == '+':
+                return self.builder.fadd(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.add(left_val, right_val)
+            elif op == '-':
+                return self.builder.fsub(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.sub(left_val, right_val)
+            elif op == '*':
+                return self.builder.fmul(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.mul(left_val, right_val)
+            elif op == '/':
+                return self.builder.fdiv(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.sdiv(left_val, right_val)
+
+        raise ValueError(f"Unsupported expression: {expr}")

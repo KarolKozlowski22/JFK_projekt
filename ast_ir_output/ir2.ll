@@ -6,15 +6,20 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.3030070452323609682" = internal constant [4 x i8] c"%d\0a\00"
-@".str.6390100985560808981" = internal constant [4 x i8] c"%f\0a\00"
+@".str.7951315541544645107" = internal constant [3 x i8] c"%d\00"
+@".str.6650026928202722788" = internal constant [3 x i8] c"%f\00"
 define void @"main"()
 {
 entry:
-  %"x" = alloca i32
-  store i32 42, i32* %"x"
-  %".3" = load i32, i32* %"x"
-  %".4" = bitcast [4 x i8]* @".str.3030070452323609682" to i8*
-  %".5" = call i32 (i8*, ...) @"printf"(i8* %".4", i32 %".3")
+  %".2" = sitofp i32 2 to float
+  %".3" = fmul float 0x400c000000000000, %".2"
+  %".4" = sitofp i32 10 to float
+  %".5" = fadd float %".4", %".3"
+  %"a" = alloca float
+  store float %".5", float* %"a"
+  %".7" = load float, float* %"a"
+  %".8" = bitcast [3 x i8]* @".str.6650026928202722788" to i8*
+  %".9" = fpext float %".7" to double
+  %".10" = call i32 (i8*, ...) @"printf"(i8* %".8", double %".9")
   ret void
 }

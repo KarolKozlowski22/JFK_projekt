@@ -71,6 +71,24 @@ class MyLangParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MyLangParser#logicalExpr.
+    def enterLogicalExpr(self, ctx:MyLangParser.LogicalExprContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#logicalExpr.
+    def exitLogicalExpr(self, ctx:MyLangParser.LogicalExprContext):
+        pass
+
+
+    # Enter a parse tree produced by MyLangParser#arithmeticExpr.
+    def enterArithmeticExpr(self, ctx:MyLangParser.ArithmeticExprContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#arithmeticExpr.
+    def exitArithmeticExpr(self, ctx:MyLangParser.ArithmeticExprContext):
+        pass
+
+
     # Enter a parse tree produced by MyLangParser#term.
     def enterTerm(self, ctx:MyLangParser.TermContext):
         pass

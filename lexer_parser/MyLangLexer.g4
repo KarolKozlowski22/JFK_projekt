@@ -5,6 +5,11 @@ FLOAT : 'float';
 PRINT : 'print';
 READ : 'read';
 
+AND : '&&';
+OR : '||';
+XOR : '^';
+NEG : '!';
+
 SEMICOLON : ';';
 EQUALITY : '=';
 PLUS : '+';

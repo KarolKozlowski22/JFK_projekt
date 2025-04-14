@@ -11,11 +11,15 @@ declare i32 @"scanf"(i8* %".1", ...)
 define void @"main"()
 {
 entry:
-  %".2" = sdiv i32 5, 3
   %"x" = alloca i32
-  store i32 %".2", i32* %"x"
-  %".4" = load i32, i32* %"x"
-  %".5" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
-  %".6" = call i32 (i8*, ...) @"printf"(i8* %".5", i32 %".4")
+  store i32 0, i32* %"x"
+  %".3" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
+  %".4" = call i32 @"fflush"(i8* null)
+  %".5" = call i32 (i8*, ...) @"scanf"(i8* %".3", i32* %"x")
+  %".6" = load i32, i32* %"x"
+  %".7" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
+  %".8" = call i32 (i8*, ...) @"printf"(i8* %".7", i32 %".6")
   ret void
 }
+
+declare i32 @"fflush"(i8* %".1")

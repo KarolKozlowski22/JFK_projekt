@@ -1,2 +1,2 @@
-int x = 42;
-print x;
+float a = 10 + 3.5 * 2;
+print a; 

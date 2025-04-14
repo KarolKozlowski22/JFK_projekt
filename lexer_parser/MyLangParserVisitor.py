@@ -44,6 +44,16 @@ class MyLangParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MyLangParser#logicalExpr.
+    def visitLogicalExpr(self, ctx:MyLangParser.LogicalExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#arithmeticExpr.
+    def visitArithmeticExpr(self, ctx:MyLangParser.ArithmeticExprContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MyLangParser#term.
     def visitTerm(self, ctx:MyLangParser.TermContext):
         return self.visitChildren(ctx)

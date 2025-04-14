@@ -6,23 +6,38 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.3030070452323609682" = internal constant [4 x i8] c"%d\0a\00"
-@".str.6390100985560808981" = internal constant [4 x i8] c"%f\0a\00"
+@".str.7951315541544645107" = internal constant [3 x i8] c"%d\00"
+@".str.6650026928202722788" = internal constant [3 x i8] c"%f\00"
 define void @"main"()
 {
 entry:
-  %"first" = alloca i32
-  store i32 10, i32* %"first"
-  %"second" = alloca i32
-  store i32 5, i32* %"second"
-  %".4" = load i32, i32* %"first"
-  %".5" = load i32, i32* %"second"
-  %".6" = load i32, i32* %"first"
-  %".7" = mul i32 %".5", %".6"
-  %".8" = add i32 %".4", %".7"
-  store i32 %".8", i32* %"first"
-  %".10" = load i32, i32* %"first"
-  %".11" = bitcast [4 x i8]* @".str.3030070452323609682" to i8*
-  %".12" = call i32 (i8*, ...) @"printf"(i8* %".11", i32 %".10")
+  %"a" = alloca i32
+  store i32 1, i32* %"a"
+  %"b" = alloca i32
+  store i32 0, i32* %"b"
+  %".4" = load i32, i32* %"a"
+  %".5" = load i32, i32* %"b"
+  %".6" = and i32 %".4", %".5"
+  %"c" = alloca i32
+  store i32 %".6", i32* %"c"
+  %".8" = load i32, i32* %"a"
+  %".9" = load i32, i32* %"b"
+  %".10" = or i32 %".8", %".9"
+  %"d" = alloca i32
+  store i32 %".10", i32* %"d"
+  %".12" = load i32, i32* %"a"
+  %".13" = load i32, i32* %"b"
+  %".14" = xor i32 %".12", %".13"
+  %"e" = alloca i32
+  store i32 %".14", i32* %"e"
+  %".16" = load i32, i32* %"c"
+  %".17" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
+  %".18" = call i32 (i8*, ...) @"printf"(i8* %".17", i32 %".16")
+  %".19" = load i32, i32* %"d"
+  %".20" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
+  %".21" = call i32 (i8*, ...) @"printf"(i8* %".20", i32 %".19")
+  %".22" = load i32, i32* %"e"
+  %".23" = bitcast [3 x i8]* @".str.7951315541544645107" to i8*
+  %".24" = call i32 (i8*, ...) @"printf"(i8* %".23", i32 %".22")
   ret void
 }

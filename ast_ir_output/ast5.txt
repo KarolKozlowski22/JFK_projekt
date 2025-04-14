@@ -1,1 +1,1 @@
-[('declaration', 'float', 'x'), ('assignment', 'x', ('/', ('*', 5.0, ('+', 2.0, 3.0)), 2.0)), ('print', 'x')]
+[('declaration', 'int', 'a', '=', 0), ('declaration', 'int', 'b', '=', ('!', 'a')), ('print', 'b')]

@@ -1,4 +1,2 @@
-int first = 10;
-int second = 5;
-first = first + second*first;
-print first;
+int x = 5/3;
+print x;
