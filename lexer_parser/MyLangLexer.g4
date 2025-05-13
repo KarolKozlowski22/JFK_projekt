@@ -5,6 +5,9 @@ FLOAT32: 'float32';
 FLOAT64 : 'float64';
 PRINT : 'print';
 READ : 'read';
+STRING : '"' (~["\\] | '\\' .)* '"';
+STRING_TYPE : 'string';
+
 
 AND : '&&';
 OR : '||';

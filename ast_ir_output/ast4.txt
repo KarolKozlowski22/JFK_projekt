@@ -1,1 +1,1 @@
-[('declaration', 'int', 'x', '=', ('/', 5, 3)), ('print', 'x')]
+[('declaration', 'int', 'x', '=', ('/', 5, 3)), ('print', 'x'), ('declaration', 'int', 'y'), ('read', 'y'), ('print', 'y')]

@@ -1,1 +1,1 @@
-[('declaration', 'float64', 'a', '=', 5.5), ('print', 'a')]
+[('declaration', 'string', 'a', '=', 'Hello, World!'), ('print', 'a')]

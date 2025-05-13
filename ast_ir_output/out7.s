@@ -9,8 +9,11 @@ main:                                   # @main
 	pushq	%rax
 	.cfi_def_cfa_offset 16
 	movl	$20, 4(%rsp)
-	movl	$.str.3948252993100881646, %edi
+	movl	$.str.4593572070920732383, %edi
 	movl	$20, %esi
+	xorl	%eax, %eax
+	callq	printf@PLT
+	movl	$.str.8146335450369478114, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	popq	%rax
@@ -20,15 +23,25 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.3948252993100881646,@object # @.str.3948252993100881646
+	.type	.str.4593572070920732383,@object # @.str.4593572070920732383
 	.section	.rodata,"a",@progbits
-.str.3948252993100881646:
+.str.4593572070920732383:
 	.asciz	"%d"
-	.size	.str.3948252993100881646, 3
+	.size	.str.4593572070920732383, 3
 
-	.type	.str.1444584550978747635,@object # @.str.1444584550978747635
-.str.1444584550978747635:
+	.type	.str.1495783277522668851,@object # @.str.1495783277522668851
+.str.1495783277522668851:
 	.asciz	"%f"
-	.size	.str.1444584550978747635, 3
+	.size	.str.1495783277522668851, 3
+
+	.type	.str.966308075288711710,@object # @.str.966308075288711710
+.str.966308075288711710:
+	.asciz	"%s"
+	.size	.str.966308075288711710, 3
+
+	.type	.str.8146335450369478114,@object # @.str.8146335450369478114
+.str.8146335450369478114:
+	.asciz	"\n"
+	.size	.str.8146335450369478114, 2
 
 	.section	".note.GNU-stack","",@progbits

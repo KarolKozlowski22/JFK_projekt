@@ -1,2 +1,2 @@
-float64 a = 5.5;
+string a = "Hello, World!";
 print a;

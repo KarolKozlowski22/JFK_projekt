@@ -6,7 +6,7 @@ program : statement+;
 
 statement : declaration | assignment | printFunc | readFunc;
 
-declaration : (INT | FLOAT32 | FLOAT64) ID (EQUALITY expr)? SEMICOLON;
+declaration : (INT | FLOAT32 | FLOAT64 | STRING_TYPE) ID (EQUALITY expr)? SEMICOLON;
 assignment : ID EQUALITY expr SEMICOLON;
 printFunc : PRINT expr SEMICOLON;
 readFunc : READ expr SEMICOLON;
@@ -35,4 +35,4 @@ term : term MULTIPLY factor
      | factor                        
      ;
 
-factor : NUMBER | ID | LP expr RP;
+factor : NUMBER | ID | STRING | LP expr RP;
