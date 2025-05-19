@@ -7,6 +7,21 @@ PRINT : 'print';
 READ : 'read';
 STRING : '"' (~["\\] | '\\' .)* '"';
 STRING_TYPE : 'string';
+IF : 'if';
+ELSE : 'else';
+WHILE : 'while';
+DEF : 'def';
+CURLY_BRACKET_OPEN : '{';
+CURLY_BRACKET_CLOSE : '}';
+RETURN : 'return';
+COMMA : ',';
+
+LT : '<';
+GT : '>';
+LE : '<=';
+GE : '>=';
+EQ : '==';
+NEQ: '!=';
 
 
 AND : '&&';

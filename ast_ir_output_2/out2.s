@@ -11,12 +11,12 @@ main:                                   # @main
 	movl	$3, %edi
 	movl	$4, %esi
 	callq	add@PLT
-	movl	%eax, 4(%rsp)
-	movl	$.str.6658440445434400440, %edi
+	movl	%eax, result(%rip)
+	movl	$.str.8341731685562686835, %edi
 	movl	%eax, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.3347073341543062685, %edi
+	movl	$.str.4313221362129951564, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	popq	%rax
@@ -42,25 +42,28 @@ add:                                    # @add
 	.size	add, .Lfunc_end1-add
 	.cfi_endproc
                                         # -- End function
-	.type	.str.6658440445434400440,@object # @.str.6658440445434400440
+	.type	.str.8341731685562686835,@object # @.str.8341731685562686835
 	.section	.rodata,"a",@progbits
-.str.6658440445434400440:
+.str.8341731685562686835:
 	.asciz	"%d"
-	.size	.str.6658440445434400440, 3
+	.size	.str.8341731685562686835, 3
 
-	.type	.str.9011845808571790903,@object # @.str.9011845808571790903
-.str.9011845808571790903:
+	.type	.str.8084496673346794580,@object # @.str.8084496673346794580
+.str.8084496673346794580:
 	.asciz	"%f"
-	.size	.str.9011845808571790903, 3
+	.size	.str.8084496673346794580, 3
 
-	.type	.str.3758218351999552703,@object # @.str.3758218351999552703
-.str.3758218351999552703:
+	.type	.str.8515177546619091338,@object # @.str.8515177546619091338
+.str.8515177546619091338:
 	.asciz	"%s"
-	.size	.str.3758218351999552703, 3
+	.size	.str.8515177546619091338, 3
 
-	.type	.str.3347073341543062685,@object # @.str.3347073341543062685
-.str.3347073341543062685:
+	.type	.str.4313221362129951564,@object # @.str.4313221362129951564
+.str.4313221362129951564:
 	.asciz	"\n"
-	.size	.str.3347073341543062685, 2
+	.size	.str.4313221362129951564, 2
 
+	.type	result,@object                  # @result
+	.local	result
+	.comm	result,4,4
 	.section	".note.GNU-stack","",@progbits

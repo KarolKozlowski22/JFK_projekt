@@ -19,6 +19,11 @@ class MyLangParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MyLangParser#exprStatement.
+    def visitExprStatement(self, ctx:MyLangParser.ExprStatementContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MyLangParser#declaration.
     def visitDeclaration(self, ctx:MyLangParser.DeclarationContext):
         return self.visitChildren(ctx)
@@ -39,6 +44,31 @@ class MyLangParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MyLangParser#ifStatement.
+    def visitIfStatement(self, ctx:MyLangParser.IfStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#whileStatement.
+    def visitWhileStatement(self, ctx:MyLangParser.WhileStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#functionDecl.
+    def visitFunctionDecl(self, ctx:MyLangParser.FunctionDeclContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#returnStatement.
+    def visitReturnStatement(self, ctx:MyLangParser.ReturnStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#block.
+    def visitBlock(self, ctx:MyLangParser.BlockContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MyLangParser#expr.
     def visitExpr(self, ctx:MyLangParser.ExprContext):
         return self.visitChildren(ctx)
@@ -46,6 +76,11 @@ class MyLangParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MyLangParser#logicalExpr.
     def visitLogicalExpr(self, ctx:MyLangParser.LogicalExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#relationalExpr.
+    def visitRelationalExpr(self, ctx:MyLangParser.RelationalExprContext):
         return self.visitChildren(ctx)
 
 

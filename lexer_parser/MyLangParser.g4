@@ -4,15 +4,30 @@ options { tokenVocab=MyLangLexer; }
 
 program : statement+;
 
-statement : declaration | assignment | printFunc | readFunc;
+statement
+    : declaration
+    | assignment
+    | printFunc
+    | readFunc
+    | ifStatement
+    | whileStatement
+    | functionDecl
+    | returnStatement
+    | exprStatement
+    ;
+
+exprStatement : expr SEMICOLON;
 
 declaration : (INT | FLOAT32 | FLOAT64 | STRING_TYPE) ID (EQUALITY expr)? SEMICOLON;
 assignment : ID EQUALITY expr SEMICOLON;
 printFunc : PRINT expr SEMICOLON;
 readFunc : READ expr SEMICOLON;
-// expr : term ((PLUS | MINUS) term)*;
-// term : factor ((MULTIPLY | DIVIDE) factor)*;
-// factor : NUMBER | ID | LP expr RP;
+ifStatement : IF LP expr RP block (ELSE block)?;
+whileStatement : WHILE LP expr RP block;
+functionDecl : DEF ID LP (ID (COMMA ID)*)? RP block;
+returnStatement : RETURN expr SEMICOLON;
+
+block : CURLY_BRACKET_OPEN statement* CURLY_BRACKET_CLOSE;
 
 expr : logicalExpr;
 
@@ -21,7 +36,11 @@ logicalExpr
     | logicalExpr OR logicalExpr    
     | logicalExpr XOR logicalExpr   
     | NEG logicalExpr               
-    | arithmeticExpr                
+    | relationalExpr                
+    ;
+
+relationalExpr
+    : arithmeticExpr ( (LT | GT | LE | GE | EQ | NEQ) arithmeticExpr )?
     ;
 
 arithmeticExpr
@@ -35,4 +54,14 @@ term : term MULTIPLY factor
      | factor                        
      ;
 
-factor : NUMBER | ID | STRING | LP expr RP;
+factor
+    : ID LP expr (COMMA expr)* RP     
+    | ID LP RP                        
+    | NUMBER
+    | ID
+    | STRING
+    | LP expr RP
+    | NEG factor
+    ;
+
+

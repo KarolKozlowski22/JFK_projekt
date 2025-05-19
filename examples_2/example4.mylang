@@ -1,0 +1,13 @@
+int x = 10;
+
+def test_scope() {
+    print x;
+}
+
+def test_local_scope() {
+    int x = 20;
+    print x;
+}
+
+test_scope();
+test_local_scope();

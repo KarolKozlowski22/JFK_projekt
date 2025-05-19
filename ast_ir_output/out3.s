@@ -51,24 +51,24 @@ main:                                   # @main
 	leaq	-16(%r14), %rsp
 	movl	%ecx, -16(%r14)
 	movl	(%rax), %esi
-	movl	$.str.8372795069725211921, %edi
+	movl	$.str.7397556834030168284, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.332649807079450794, %edi
+	movl	$.str.8700303344908842345, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	movl	-16(%rbx), %esi
-	movl	$.str.8372795069725211921, %edi
+	movl	$.str.7397556834030168284, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.332649807079450794, %edi
+	movl	$.str.8700303344908842345, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	movl	-16(%r14), %esi
-	movl	$.str.8372795069725211921, %edi
+	movl	$.str.7397556834030168284, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.332649807079450794, %edi
+	movl	$.str.8700303344908842345, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	leaq	-16(%rbp), %rsp
@@ -81,25 +81,25 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.8372795069725211921,@object # @.str.8372795069725211921
+	.type	.str.7397556834030168284,@object # @.str.7397556834030168284
 	.section	.rodata,"a",@progbits
-.str.8372795069725211921:
+.str.7397556834030168284:
 	.asciz	"%d"
-	.size	.str.8372795069725211921, 3
+	.size	.str.7397556834030168284, 3
 
-	.type	.str.170774002489608625,@object # @.str.170774002489608625
-.str.170774002489608625:
+	.type	.str.7383418316188768217,@object # @.str.7383418316188768217
+.str.7383418316188768217:
 	.asciz	"%f"
-	.size	.str.170774002489608625, 3
+	.size	.str.7383418316188768217, 3
 
-	.type	.str.3693790085204977514,@object # @.str.3693790085204977514
-.str.3693790085204977514:
+	.type	.str.6509151619883873605,@object # @.str.6509151619883873605
+.str.6509151619883873605:
 	.asciz	"%s"
-	.size	.str.3693790085204977514, 3
+	.size	.str.6509151619883873605, 3
 
-	.type	.str.332649807079450794,@object # @.str.332649807079450794
-.str.332649807079450794:
+	.type	.str.8700303344908842345,@object # @.str.8700303344908842345
+.str.8700303344908842345:
 	.asciz	"\n"
-	.size	.str.332649807079450794, 2
+	.size	.str.8700303344908842345, 2
 
 	.section	".note.GNU-stack","",@progbits

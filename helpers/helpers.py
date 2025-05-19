@@ -2,7 +2,7 @@ import os
 
 def read_examples():
     try:
-        os.chdir("./examples")
+        os.chdir("./examples_2")
     except FileNotFoundError:
         print("No such directory")
         return
@@ -19,7 +19,7 @@ def read_examples():
 
 def save_ir_module(ir_module, it):
     try:
-        os.chdir("./ast_ir_output")
+        os.chdir("./ast_ir_output_2")
     except FileNotFoundError:
         print("No such directory")
         return
@@ -34,7 +34,7 @@ def save_ir_module(ir_module, it):
 
 def save_ast(node, it):
     try:
-        os.chdir("./ast_ir_output")
+        os.chdir("./ast_ir_output_2")
     except FileNotFoundError:
         print("No such directory")
         return
@@ -48,7 +48,7 @@ def save_ast(node, it):
 
 def compile_ir(it):
     try:
-        os.chdir("./ast_ir_output")
+        os.chdir("./ast_ir_output_2")
     except FileNotFoundError:
         print("No such directory")
     if os.path.exists(f"ir{it}.ll"):

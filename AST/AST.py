@@ -47,7 +47,7 @@ class ASTBuilder(MyLangParserVisitor):
     
     def visitLogicalExpr(self, ctx: MyLangParser.LogicalExprContext):
         if ctx.getChildCount() == 1: 
-            return self.visit(ctx.arithmeticExpr())
+            return self.visit(ctx.relationalExpr())
         elif ctx.getChildCount() == 2:  
             op = ctx.getChild(0).getText()  
             right = self.visit(ctx.getChild(1))
@@ -75,18 +75,76 @@ class ASTBuilder(MyLangParserVisitor):
             op = ctx.getChild(1).getText() 
             right = self.visit(ctx.getChild(2))
             return (op, left, right)
+        
+    def visitExprStatement(self, ctx):
+        return self.visit(ctx.expr())
+        
+    def visitFactor(self, ctx: MyLangParser.FactorContext):
+    # 1. literały
+        if ctx.NUMBER():
+            text = ctx.NUMBER().getText()
+            return float(text) if '.' in text else int(text)
+        if ctx.STRING():
+            return ctx.STRING().getText()[1:-1]
+
+        # 2. ID [+ optional call]
+        if ctx.ID():
+            name = ctx.ID().getText()
+            if ctx.LP():                      # wywołanie funkcji
+                args = [self.visit(e) for e in ctx.expr()]  # będzie pusta lista dla foo()
+                return ('call', name, args)
+            else:                             # zwykła zmienna
+                return name
+
+        # 3. (  expr  )
+        if ctx.LP():
+            return self.visit(ctx.expr(0))    # tu już wiemy, że expr istnieje
+
+        # 4. !factor  (negacja)
+        if ctx.getChild(0).getText() == '!':
+            return ('!', self.visit(ctx.getChild(1)))
+
+        # nie powinno się zdarzyć
+        raise ValueError("Nieobsłużona konstrukcja w factor")
+
+
+
 
     
-    def visitFactor(self, ctx: MyLangParser.FactorContext):
-        if ctx.NUMBER():
-            return float(ctx.NUMBER().getText()) if '.' in ctx.NUMBER().getText() else int(ctx.NUMBER().getText())
-        elif ctx.STRING():
-            return ctx.STRING().getText()[1:-1]
-        elif ctx.ID():
-            return ctx.ID().getText()
-        elif ctx.LP():
-            return self.visit(ctx.expr())
-        elif ctx.NEG():
-            return ('NEG', self.visit(ctx.expr()))
+    def visitIfStatement(self, ctx):
+        cond = self.visit(ctx.expr())
+        then_block = [self.visit(s) for s in ctx.block(0).statement()]
+        else_block = [self.visit(s) for s in ctx.block(1).statement()] if ctx.block(1) else []
+        return ('if', cond, then_block, else_block)
+    
+    def visitWhileStatement(self, ctx):
+        cond = self.visit(ctx.expr())
+        body = [self.visit(s) for s in ctx.block().statement()]
+        return ('while', cond, body)
+
+    def visitFunctionDecl(self, ctx):
+        ids = ctx.ID()
+        name = ids[0].getText()
+        params = [p.getText() for p in ids[1:]]  # wszystkie poza nazwą funkcji
+        body = [self.visit(s) for s in ctx.block().statement()]
+        return ('function', name, params, body)
+    
+    def visitReturnStatement(self, ctx):
+        return ('return', self.visit(ctx.expr()))
+    
+    def visitFuncCall(self, ctx):
+        func_name = ctx.ID().getText()
+        args = [self.visit(e) for e in ctx.expr()]
+        return ('call', func_name, args)
+    
+    def visitNegation(self, ctx):
+        return ('!', self.visit(ctx.factor()))
+    
+    def visitRelationalExpr(self, ctx: MyLangParser.RelationalExprContext):
+        if ctx.getChildCount() == 1:
+            return self.visit(ctx.arithmeticExpr(0))
         else:
-            return self.visit(ctx.expr())
+            left = self.visit(ctx.arithmeticExpr(0))
+            op = ctx.getChild(1).getText()
+            right = self.visit(ctx.arithmeticExpr(1))
+            return (op, left, right)

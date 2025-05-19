@@ -10,19 +10,19 @@ main:                                   # @main
 	.cfi_def_cfa_offset 16
 	movl	$3, 4(%rsp)
 	movl	$1080033280, (%rsp)             # imm = 0x40600000
-	movl	$.str.4593572070920732383, %edi
+	movl	$.str.7397556834030168284, %edi
 	movl	$3, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.8146335450369478114, %edi
+	movl	$.str.8700303344908842345, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	movss	(%rsp), %xmm0                   # xmm0 = mem[0],zero,zero,zero
 	cvtss2sd	%xmm0, %xmm0
-	movl	$.str.1495783277522668851, %edi
+	movl	$.str.7383418316188768217, %edi
 	movb	$1, %al
 	callq	printf@PLT
-	movl	$.str.8146335450369478114, %edi
+	movl	$.str.8700303344908842345, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	popq	%rax
@@ -32,25 +32,25 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.4593572070920732383,@object # @.str.4593572070920732383
+	.type	.str.7397556834030168284,@object # @.str.7397556834030168284
 	.section	.rodata,"a",@progbits
-.str.4593572070920732383:
+.str.7397556834030168284:
 	.asciz	"%d"
-	.size	.str.4593572070920732383, 3
+	.size	.str.7397556834030168284, 3
 
-	.type	.str.1495783277522668851,@object # @.str.1495783277522668851
-.str.1495783277522668851:
+	.type	.str.7383418316188768217,@object # @.str.7383418316188768217
+.str.7383418316188768217:
 	.asciz	"%f"
-	.size	.str.1495783277522668851, 3
+	.size	.str.7383418316188768217, 3
 
-	.type	.str.966308075288711710,@object # @.str.966308075288711710
-.str.966308075288711710:
+	.type	.str.6509151619883873605,@object # @.str.6509151619883873605
+.str.6509151619883873605:
 	.asciz	"%s"
-	.size	.str.966308075288711710, 3
+	.size	.str.6509151619883873605, 3
 
-	.type	.str.8146335450369478114,@object # @.str.8146335450369478114
-.str.8146335450369478114:
+	.type	.str.8700303344908842345,@object # @.str.8700303344908842345
+.str.8700303344908842345:
 	.asciz	"\n"
-	.size	.str.8146335450369478114, 2
+	.size	.str.8700303344908842345, 2
 
 	.section	".note.GNU-stack","",@progbits

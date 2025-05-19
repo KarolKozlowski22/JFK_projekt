@@ -1,11 +1,6 @@
 	.text
 	.file	"ir1.ll"
-	.section	.rodata.cst8,"aM",@progbits,8
-	.p2align	3, 0x0                          # -- Begin function main
-.LCPI0_0:
-	.quad	0x4024000000000000              # double 10
-	.text
-	.globl	main
+	.globl	main                            # -- Begin function main
 	.p2align	4, 0x90
 	.type	main,@function
 main:                                   # @main
@@ -13,13 +8,22 @@ main:                                   # @main
 # %bb.0:                                # %entry
 	pushq	%rax
 	.cfi_def_cfa_offset 16
-	movabsq	$4621819117588971520, %rax      # imm = 0x4024000000000000
-	movq	%rax, (%rsp)
-	movsd	.LCPI0_0(%rip), %xmm0           # xmm0 = [1.0E+1,0.0E+0]
-	movl	$.str.170774002489608625, %edi
+	movl	$0, 4(%rsp)
+	movl	$0, (%rsp)
 	movb	$1, %al
+	testb	%al, %al
+	jne	.LBB0_2
+# %bb.1:                                # %if.then
+	movl	$1, (%rsp)
+	jmp	.LBB0_3
+.LBB0_2:                                # %if.else
+	movl	$2, (%rsp)
+.LBB0_3:                                # %if.end
+	movl	(%rsp), %esi
+	movl	$.str.6658440445434400440, %edi
+	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.332649807079450794, %edi
+	movl	$.str.3347073341543062685, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	popq	%rax
@@ -29,25 +33,25 @@ main:                                   # @main
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.8372795069725211921,@object # @.str.8372795069725211921
+	.type	.str.6658440445434400440,@object # @.str.6658440445434400440
 	.section	.rodata,"a",@progbits
-.str.8372795069725211921:
+.str.6658440445434400440:
 	.asciz	"%d"
-	.size	.str.8372795069725211921, 3
+	.size	.str.6658440445434400440, 3
 
-	.type	.str.170774002489608625,@object # @.str.170774002489608625
-.str.170774002489608625:
+	.type	.str.9011845808571790903,@object # @.str.9011845808571790903
+.str.9011845808571790903:
 	.asciz	"%f"
-	.size	.str.170774002489608625, 3
+	.size	.str.9011845808571790903, 3
 
-	.type	.str.3693790085204977514,@object # @.str.3693790085204977514
-.str.3693790085204977514:
+	.type	.str.3758218351999552703,@object # @.str.3758218351999552703
+.str.3758218351999552703:
 	.asciz	"%s"
-	.size	.str.3693790085204977514, 3
+	.size	.str.3758218351999552703, 3
 
-	.type	.str.332649807079450794,@object # @.str.332649807079450794
-.str.332649807079450794:
+	.type	.str.3347073341543062685,@object # @.str.3347073341543062685
+.str.3347073341543062685:
 	.asciz	"\n"
-	.size	.str.332649807079450794, 2
+	.size	.str.3347073341543062685, 2
 
 	.section	".note.GNU-stack","",@progbits

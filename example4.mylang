@@ -1,0 +1,8 @@
+int x = 5;
+int y = 10;
+def test(y) {
+  int x = 10+y;
+  print x;
+}
+test(y);
+print x;

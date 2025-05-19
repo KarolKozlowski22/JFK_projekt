@@ -6,10 +6,10 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.4593572070920732383" = internal constant [3 x i8] c"%d\00"
-@".str.1495783277522668851" = internal constant [3 x i8] c"%f\00"
-@".str.966308075288711710" = internal constant [3 x i8] c"%s\00"
-@".str.8146335450369478114" = internal constant [2 x i8] c"\0a\00"
+@".str.7397556834030168284" = internal constant [3 x i8] c"%d\00"
+@".str.7383418316188768217" = internal constant [3 x i8] c"%f\00"
+@".str.6509151619883873605" = internal constant [3 x i8] c"%s\00"
+@".str.8700303344908842345" = internal constant [2 x i8] c"\0a\00"
 define void @"main"()
 {
 entry:
@@ -21,13 +21,13 @@ entry:
   %"c" = alloca float
   store float %".5", float* %"c"
   %".7" = load i32, i32* %"b"
-  %".8" = bitcast [2 x i8]* @".str.8146335450369478114" to i8*
-  %".9" = bitcast [3 x i8]* @".str.4593572070920732383" to i8*
+  %".8" = bitcast [2 x i8]* @".str.8700303344908842345" to i8*
+  %".9" = bitcast [3 x i8]* @".str.7397556834030168284" to i8*
   %".10" = call i32 (i8*, ...) @"printf"(i8* %".9", i32 %".7")
   %".11" = call i32 (i8*, ...) @"printf"(i8* %".8")
   %".12" = load float, float* %"c"
-  %".13" = bitcast [2 x i8]* @".str.8146335450369478114" to i8*
-  %".14" = bitcast [3 x i8]* @".str.1495783277522668851" to i8*
+  %".13" = bitcast [2 x i8]* @".str.8700303344908842345" to i8*
+  %".14" = bitcast [3 x i8]* @".str.7383418316188768217" to i8*
   %".15" = fpext float %".12" to double
   %".16" = call i32 (i8*, ...) @"printf"(i8* %".14", double %".15")
   %".17" = call i32 (i8*, ...) @"printf"(i8* %".13")

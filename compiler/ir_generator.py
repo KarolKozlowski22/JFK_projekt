@@ -1,287 +1,371 @@
 from llvmlite import ir
 
+
 class IRGenerator:
+    # ─────────────────────────────── Init ────────────────────────────────
     def __init__(self):
-        self.module = ir.Module("my_lang")
-        self.builder = None
-        self.vars = {}
-        self.module.triple = "x86_64-pc-linux-gnu" 
-        self.module.data_layout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"       
+        self.module = ir.Module(name="my_lang")
+        self.module.triple = "x86_64-pc-linux-gnu"
+        self.module.data_layout = (
+            "e-m:e-p270:32:32-p271:32:32-p272:64:64-"
+            "i64:64-f80:128-n8:16:32:64-S128"
+        )
+
+        self.builder = None           # current IRBuilder
+        self.env_stack = [{}]         # symbol tables stack (0 = global)
+        self.pending_inits = []       # delayed initialisations for globals
+
+        # libc printf / scanf
         voidptr = ir.PointerType(ir.IntType(8))
         i32 = ir.IntType(32)
-        
         self.printf = ir.Function(
             self.module,
             ir.FunctionType(i32, [voidptr], var_arg=True),
-            "printf"
+            name="printf",
         )
-        
         self.scanf = ir.Function(
             self.module,
             ir.FunctionType(i32, [voidptr], var_arg=True),
-            "scanf"
+            name="scanf",
         )
-        
-        self.fmt_int = self._create_unique_global_string("%d")
-        self.fmt_float = self._create_unique_global_string("%f")
-        self.fmt_string = self._create_unique_global_string("%s")
-        self.fmt_newline = self._create_unique_global_string("\n")
 
-    def _create_unique_global_string(self, text):
-        text_bytes = bytearray(text.encode() + b'\x00')
-        arr_type = ir.ArrayType(ir.IntType(8), len(text_bytes))
-        unique_name = f".str.{abs(hash(text))}"
-        
-        global_str = ir.GlobalVariable(
-            self.module,
-            arr_type,
-            unique_name
+        # format strings
+        self.fmt_int    = self._gstr("%d")
+        self.fmt_float  = self._gstr("%f")
+        self.fmt_string = self._gstr("%s")
+        self.fmt_nl     = self._gstr("\n")
+
+    # ───────────────────────────── Helpers ───────────────────────────────
+    def _gstr(self, txt: str) -> ir.GlobalVariable:
+        """Create an internal NUL-terminated string."""
+        arr_t = ir.ArrayType(ir.IntType(8), len(txt) + 1)
+        g = ir.GlobalVariable(self.module, arr_t, name=f".str.{abs(hash(txt))}")
+        g.linkage = "internal"
+        g.global_constant = True
+        g.initializer = ir.Constant(arr_t, bytearray(txt.encode() + b"\x00"))
+        return g
+
+    def _str_ptr(self, g):
+        return self.builder.bitcast(g, ir.PointerType(ir.IntType(8)))
+
+    def _in_global_scope(self) -> bool:
+        return (
+            len(self.env_stack) == 1
+            and self.builder
+            and self.builder.function.name == "main"
         )
-        global_str.initializer = ir.Constant(arr_type, text_bytes)
-        global_str.linkage = 'internal'
-        global_str.global_constant = True
-        return global_str
 
+    # ───────────────────────────── Generate ──────────────────────────────
     def generate(self, ast):
-        main_func = ir.Function(
-            self.module,
-            ir.FunctionType(ir.VoidType(), []),
-            "main"
+        """Three-pass module generation."""
+        main = ir.Function(
+            self.module, ir.FunctionType(ir.VoidType(), []), name="main"
         )
-        entry_block = main_func.append_basic_block("entry")
-        self.builder = ir.IRBuilder(entry_block)
-        
-        for node in ast:
-            self.process_node(node)
-            
+        entry = main.append_basic_block("entry")
+        self.builder = ir.IRBuilder(entry)
+
+        # Pass 1 – globals
+        for n in ast:
+            if n[0] == "declaration":
+                self._handle_declaration(n)
+
+        # Pass 2 – functions
+        for n in ast:
+            if n[0] == "function":
+                self._handle_function(n[1], n[2], n[3])
+
+        # Pass 2.5 – delayed global initialisers
+        for a in self.pending_inits:
+            self._handle_assignment(a)
+
+        # Pass 3 – remaining top-level statements (executed in main)
+        for n in ast:
+            if n[0] not in ("declaration", "function"):
+                self._process(n)
+
         self.builder.ret_void()
         return self.module
-    
-    def _create_string(self, text):
-        text_bytes = bytearray(text.encode() + b'\x00')
-        arr_type = ir.ArrayType(ir.IntType(8), len(text_bytes))
-        global_str = ir.GlobalVariable(self.module, arr_type, name=f".str.{abs(hash(text))}")
-        global_str.initializer = ir.Constant(arr_type, text_bytes)
-        global_str.linkage = 'internal'
-        global_str.global_constant = True
-        return self.builder.bitcast(global_str, ir.PointerType(ir.IntType(8)))
 
+    # ───────────────────────── Dispatcher ────────────────────────────────
+    def _process(self, node):
+        match node:
+            case ("declaration", *_):
+                self._handle_declaration(node)
+            case ("assignment", *_):
+                self._handle_assignment(node)
+            case ("print", *_):
+                self._handle_print(node)
+            case ("read", *_):
+                self._handle_read(node)
+            case ("if", c, t, e):
+                self._handle_if(c, t, e)
+            case ("while", c, b):
+                self._handle_while(c, b)
+            case ("function", n, p, b):
+                self._handle_function(n, p, b)
+            case ("return", e):
+                self._handle_return(e)
+            case ("call", n, a):
+                self._eval(("call", n, a))
+            case _:
+                raise ValueError(f"Unknown AST node: {node}")
 
-    def process_node(self, node):
-        if node[0] == 'declaration':
-            self.handle_declaration(node)
-        elif node[0] == 'assignment':
-            self.handle_assignment(node)
-        elif node[0] == 'print':
-            self.handle_print(node)
-        elif node[0] == 'read':
-            self.handle_read(node)
+    # ─────────────────────── Declarations & assign ───────────────────────
+    def _llvm_type(self, kwd):
+        if kwd == "int":
+            return ir.IntType(32), ir.Constant(ir.IntType(32), 0)
+        if kwd == "float32":
+            return ir.FloatType(), ir.Constant(ir.FloatType(), 0.0)
+        if kwd == "float64":
+            return ir.DoubleType(), ir.Constant(ir.DoubleType(), 0.0)
+        if kwd == "string":
+            t = ir.PointerType(ir.IntType(8))
+            return t, ir.Constant(t, None)
+        raise ValueError("unknown type")
 
-    def handle_declaration(self, node):
-        var_type = None
-        if node[1] == 'int':
-            var_type = ir.IntType(32)
-            init_value = ir.Constant(var_type, 0)
-        elif node[1] == 'float32':
-            var_type = ir.FloatType()
-            init_value = ir.Constant(var_type, 0.0)
-        elif node[1] == 'float64':
-            var_type = ir.DoubleType()
-            init_value = ir.Constant(var_type, 0.0)
-        elif node[1] == 'string':
-            var_type = ir.PointerType(ir.IntType(8))
-            init_value = ir.Constant(var_type, None)
-        var_name = node[2]
-        
-        # init_value = ir.Constant(var_type, 0.0 if isinstance(var_type, (ir.FloatType, ir.DoubleType)) else 0)
+    def _handle_declaration(self, node):
+        _, typ_kwd, name, *tail = node
+        llvm_t, zero = self._llvm_type(typ_kwd)
+        init_expr = tail[1] if tail and tail[0] == "=" else None
 
-        if len(node) > 3 and node[3] == '=':
-            init_value = self.evaluate_expr(node[4])
-            if isinstance(var_type, ir.FloatType) and str(init_value.type) == 'double':
-                init_value = self.builder.fptrunc(init_value, ir.FloatType())  
-            elif isinstance(var_type, ir.DoubleType) and str(init_value.type) == 'float':
-                init_value = self.builder.fpext(init_value, ir.DoubleType())  
-            elif isinstance(var_type, ir.FloatType) and str(init_value.type) == 'i32':
-                init_value = self.builder.sitofp(init_value, ir.FloatType())  
-            elif isinstance(var_type, ir.DoubleType) and str(init_value.type) == 'i32':
-                init_value = self.builder.sitofp(init_value, ir.DoubleType())  
-        # if len(node) > 3 and node[3] == '=':
-        #     init_value = self.evaluate_expr(node[4])
-        #     if var_type == ir.FloatType() and str(init_value.type) == 'i32':
-        #         init_value = self.builder.sitofp(init_value, ir.FloatType())
-        
-        alloca = self.builder.alloca(var_type, name=var_name)
-        self.builder.store(init_value, alloca)
-        self.vars[var_name] = alloca
-
-
-    def handle_assignment(self, node):
-        var_name = node[1]
-        value = self.evaluate_expr(node[2])
-        if str(value.type) != str(self.vars[var_name].type.pointee):
-            raise TypeError(f"Type mismatch in assignment to {var_name}")
-        self.builder.store(value, self.vars[var_name])
-
-    def handle_print(self, node):
-        value = self.evaluate_expr(node[1])
-        newline_ptr = self.builder.bitcast(self.fmt_newline, ir.PointerType(ir.IntType(8)))
-        if isinstance(node[1], str) and node[1] not in self.vars:
-            raise NameError(f"Variable '{node[1]}' is not declared.")
-
-        if str(value.type) == 'i32':
-            fmt_ptr = self.builder.bitcast(self.fmt_int, ir.PointerType(ir.IntType(8)))
-            self.builder.call(self.printf, [fmt_ptr, value])
-            self.builder.call(self.printf, [newline_ptr])
-        elif str(value.type) == 'float':
-            fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-            value = self.builder.fpext(value, ir.DoubleType())
-            self.builder.call(self.printf, [fmt_ptr, value])
-            self.builder.call(self.printf, [newline_ptr])
-        elif str(value.type) == 'double':
-            fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-            self.builder.call(self.printf, [fmt_ptr, value])
-            self.builder.call(self.printf, [newline_ptr])
-        elif str(value.type) == 'i8*':
-            fmt_ptr = self.builder.bitcast(self.fmt_string, ir.PointerType(ir.IntType(8)))
-            self.builder.call(self.printf, [fmt_ptr, value])
-            self.builder.call(self.printf, [newline_ptr])
-        else:
-            raise TypeError(f"Unsupported type for print: {value.type}")
-
-        # if str(value.type) == 'i32':
-        #     fmt_ptr = self.builder.bitcast(self.fmt_int, ir.PointerType(ir.IntType(8)))
-        #     self.builder.call(self.printf, [fmt_ptr, value])
-        #     self.builder.call(self.printf, [newline_ptr])
-        # elif str(value.type) == 'string':
-        #     self.builder.call(self.printf, [value])
-        #     self.builder.call(self.printf, [newline_ptr])
-        # else:
-        #     fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-
-        #     if str(value.type) == 'float':
-        #         value = self.builder.fpext(value, ir.DoubleType())
-        #     self.builder.call(self.printf, [fmt_ptr, value])
-        #     self.builder.call(self.printf, [newline_ptr])
-
-    def handle_read(self, node):
-        var_name = node[1]
-        if var_name not in self.vars:
-            raise NameError(f"Variable '{var_name}' is not declared.")  
-
-        var = self.vars[var_name]
-        var_type = str(var.type.pointee)
-
-        if var_type == 'i32':  
-            fmt_ptr = self.builder.bitcast(self.fmt_int, ir.PointerType(ir.IntType(8)))
-        elif var_type == 'float':  
-            fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-        elif var_type == 'double':  
-            fmt_ptr = self.builder.bitcast(self.fmt_float, ir.PointerType(ir.IntType(8)))
-        elif var_type == 'i8*':  
-            fmt_ptr = self.builder.bitcast(self.fmt_string, ir.PointerType(ir.IntType(8)))
-        else:
-            raise TypeError(f"Unsupported type for read: {var_type}")
-
-        fflush = ir.Function(
-            self.module,
-            ir.FunctionType(ir.IntType(32), [ir.PointerType(ir.IntType(8))]),
-            "fflush"
-        )
-        self.builder.call(fflush, [ir.Constant(ir.PointerType(ir.IntType(8)), None)])
-
-        self.builder.call(self.scanf, [fmt_ptr, var])
-
-    def evaluate_expr(self, expr):
-        if isinstance(expr, (int, float)):
-            if isinstance(expr, int):
-                return ir.Constant(ir.IntType(32), expr)
+        # ─── Global ──────────────────────────────────────────────
+        if self._in_global_scope():
+            g = ir.GlobalVariable(self.module, llvm_t, name)
+            if init_expr is None or (isinstance(init_expr, (int, float)) and init_expr == 0):
+                g.linkage = "common" 
             else:
-                return ir.Constant(ir.FloatType(), expr)
+                g.linkage = "internal"
+            g.initializer = zero
+            self.env_stack[0][name] = g
+            if init_expr is not None:
+                if isinstance(init_expr, (int, float)):
+                    g.initializer = self._eval(init_expr)
+                else:
+                    # non-constant ⇒ store later in main
+                    self.pending_inits.append(("assignment", name, init_expr))
+            return
 
-        elif isinstance(expr, str):
-            if expr not in self.vars:
-                return self._create_string(expr)
-            #     raise NameError(f"Variable '{expr}' is not declared.") 
-            return self.builder.load(self.vars[expr])
+        # ─── Local ───────────────────────────────────────────────
+        ptr = self.builder.alloca(llvm_t, name=name)
+        val = self._eval(init_expr) if init_expr is not None else zero
+        self.builder.store(val, ptr)
+        self._cur_scope()[name] = ptr
 
-        elif isinstance(expr, tuple):
-            op = expr[0]
+    def _handle_assignment(self, node):
+        _, name, expr = node
+        val = self._eval(expr)
+        ptr = self._lookup(name)
+        self.builder.store(val, ptr)
 
-            if op == '!':
-                val = self.evaluate_expr(expr[1])
-                bool_val = self.builder.icmp_unsigned('!=', val, ir.Constant(val.type, 0))
-                result = self.builder.xor(bool_val, ir.Constant(ir.IntType(1), 1))
-                return self.builder.zext(result, ir.IntType(32))
+    # ───────────────────────────── I/O ────────────────────────────────────
+    def _handle_print(self, node):
+        _, expr = node
+        v = self._eval(expr)
+        t = str(v.type)
 
-            if op == '&&':
-                left_val = self.evaluate_expr(expr[1])
-                left_bool = self.builder.icmp_unsigned('!=', left_val, ir.Constant(left_val.type, 0))
-                left_block = self.builder.block  
+        if t == "i32":
+            fmt = self._str_ptr(self.fmt_int)
+            args = [fmt, v]
+        elif t in ("float", "double"):
+            fmt = self._str_ptr(self.fmt_float)
+            v2 = (
+                self.builder.fpext(v, ir.DoubleType())
+                if t == "float"
+                else v
+            )
+            args = [fmt, v2]
+        elif t == "i8*":
+            fmt = self._str_ptr(self.fmt_string)
+            args = [fmt, v]
+        else:
+            raise TypeError("print: unsupported type")
 
-                right_block = self.builder.append_basic_block("and.right")
-                end_block = self.builder.append_basic_block("and.end")
+        self.builder.call(self.printf, args)
+        self.builder.call(self.printf, [self._str_ptr(self.fmt_nl)])
 
-                self.builder.cbranch(left_bool, right_block, end_block)
+    def _handle_read(self, node):
+        _, name = node
+        ptr = self._lookup(name)
+        p = str(ptr.type.pointee)
+        fmt = (
+            self._str_ptr(self.fmt_int)
+            if p == "i32"
+            else self._str_ptr(self.fmt_float)
+            if p in ("float", "double")
+            else self._str_ptr(self.fmt_string)
+            if p == "i8*"
+            else None
+        )
+        if fmt is None:
+            raise TypeError("read: unsupported type")
+        self.builder.call(self.scanf, [fmt, ptr])
 
-                self.builder.position_at_start(right_block)
-                right_val = self.evaluate_expr(expr[2])
-                right_bool = self.builder.icmp_unsigned('!=', right_val, ir.Constant(right_val.type, 0))
-                right_eval_block = self.builder.block  
-                self.builder.branch(end_block)
+    # ───────────────────────────── Eval ───────────────────────────────────
+    def _eval(self, expr):
+        # literals / identifier
+        if expr is None:
+            raise ValueError("eval(None)")
+        if isinstance(expr, int):
+            return ir.Constant(ir.IntType(32), expr)
+        if isinstance(expr, float):
+            return ir.Constant(ir.FloatType(), expr)
+        if isinstance(expr, str):
+            return self.builder.load(self._lookup(expr))
 
-                self.builder.position_at_start(end_block)
-                phi = self.builder.phi(ir.IntType(1))
-                phi.add_incoming(ir.Constant(ir.IntType(1), 0), left_block)         
-                phi.add_incoming(right_bool, right_eval_block)                      
-                return self.builder.zext(phi, ir.IntType(32))
+        op = expr[0]
 
-            if op == '||':
-                left_val = self.evaluate_expr(expr[1])
-                left_bool = self.builder.icmp_unsigned('!=', left_val, ir.Constant(left_val.type, 0))
-                left_block = self.builder.block 
+        # call
+        if op == "call":
+            _, fname, args_ast = expr
+            func = self._lookup(fname)
+            args = [self._eval(a) for a in args_ast]
+            return self.builder.call(func, args)
 
-                right_block = self.builder.append_basic_block("or.right")
-                end_block = self.builder.append_basic_block("or.end")
+        # unary !
+        if op == "!":
+            v = self._eval(expr[1])
+            cmp = self.builder.icmp_unsigned("!=", v, ir.Constant(v.type, 0))
+            inv = self.builder.xor(cmp, ir.Constant(ir.IntType(1), 1))
+            return self.builder.zext(inv, ir.IntType(32))
 
-                self.builder.cbranch(left_bool, end_block, right_block)
+        # binary
+        left = self._eval(expr[1])
+        right = self._eval(expr[2])
 
-                self.builder.position_at_start(right_block)
-                right_val = self.evaluate_expr(expr[2])
-                right_bool = self.builder.icmp_unsigned('!=', right_val, ir.Constant(right_val.type, 0))
-                right_eval_block = self.builder.block  
-                self.builder.branch(end_block)
+        # auto-cast int→float
+        if left.type != right.type:
+            if isinstance(left.type, ir.IntType):
+                left = self.builder.sitofp(left, right.type)
+            elif isinstance(right.type, ir.IntType):
+                right = self.builder.sitofp(right, left.type)
 
-                self.builder.position_at_start(end_block)
-                phi = self.builder.phi(ir.IntType(1))
-                phi.add_incoming(ir.Constant(ir.IntType(1), 1), left_block)        
-                phi.add_incoming(right_bool, right_eval_block)                      
-                return self.builder.zext(phi, ir.IntType(32))
+        if op in {"+", "-", "*", "/"}:
+            if op == "+":
+                return (
+                    self.builder.add(left, right)
+                    if isinstance(left.type, ir.IntType)
+                    else self.builder.fadd(left, right)
+                )
+            if op == "-":
+                return (
+                    self.builder.sub(left, right)
+                    if isinstance(left.type, ir.IntType)
+                    else self.builder.fsub(left, right)
+                )
+            if op == "*":
+                return (
+                    self.builder.mul(left, right)
+                    if isinstance(left.type, ir.IntType)
+                    else self.builder.fmul(left, right)
+                )
+            if op == "/":
+                return (
+                    self.builder.sdiv(left, right)
+                    if isinstance(left.type, ir.IntType)
+                    else self.builder.fdiv(left, right)
+                )
 
-            if op == '^':
-                left_val = self.evaluate_expr(expr[1])
-                right_val = self.evaluate_expr(expr[2])
-                left_bool = self.builder.icmp_unsigned('!=', left_val, ir.Constant(left_val.type, 0))
-                right_bool = self.builder.icmp_unsigned('!=', right_val, ir.Constant(right_val.type, 0))
-                xor_val = self.builder.xor(left_bool, right_bool)
-                return self.builder.zext(xor_val, ir.IntType(32))
+        if op in {"<", "<=", ">", ">=", "==", "!="}:
+            cmp = (
+                self.builder.icmp_signed(op, left, right)
+                if isinstance(left.type, ir.IntType)
+                else self.builder.fcmp_ordered(op, left, right)
+            )
+            return self.builder.zext(cmp, ir.IntType(32))
 
-            left_val = self.evaluate_expr(expr[1])
-            right_val = self.evaluate_expr(expr[2])
+        raise ValueError(f"unsupported expr op {op}")
 
-            if left_val.type != right_val.type:
-                if isinstance(left_val.type, ir.IntType) and isinstance(right_val.type, (ir.FloatType, ir.DoubleType)):
-                    left_val = self.builder.sitofp(left_val, right_val.type)
-                elif isinstance(left_val.type, (ir.FloatType, ir.DoubleType)) and isinstance(right_val.type, ir.IntType):
-                    right_val = self.builder.sitofp(right_val, left_val.type)
+    # ──────────────────────── Control Flow ───────────────────────────────
+    def _handle_while(self, cond, body):
+        f = self.builder.function
+        b_cond = f.append_basic_block("while.cond")
+        b_body = f.append_basic_block("while.body")
+        b_after = f.append_basic_block("while.after")
 
-            if op == '+':
-                return self.builder.fadd(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.add(left_val, right_val)
-            elif op == '-':
-                return self.builder.fsub(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.sub(left_val, right_val)
-            elif op == '*':
-                return self.builder.fmul(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.mul(left_val, right_val)
-            elif op == '/':
-                return self.builder.fdiv(left_val, right_val) if isinstance(left_val.type, ir.FloatType) else self.builder.sdiv(left_val, right_val)
+        self.builder.branch(b_cond)
 
-        raise ValueError(f"Unsupported expression: {expr}")
+        self.builder.position_at_start(b_cond)
+        c = self._eval(cond)
+        cb = self.builder.icmp_unsigned("!=", c, ir.Constant(c.type, 0))
+        self.builder.cbranch(cb, b_body, b_after)
 
+        self.builder.position_at_start(b_body)
+        self._push()
+        for st in body:
+            self._process(st)
+        self._pop()
+        self.builder.branch(b_cond)
+
+        self.builder.position_at_start(b_after)
+
+    def _handle_if(self, cond, then_b, else_b):
+        f = self.builder.function
+        b_then = f.append_basic_block("if.then")
+        b_else = f.append_basic_block("if.else") if else_b else None
+        b_end = f.append_basic_block("if.end")
+
+        c = self._eval(cond)
+        cb = self.builder.icmp_unsigned("!=", c, ir.Constant(c.type, 0))
+        self.builder.cbranch(cb, b_then, b_else if else_b else b_end)
+
+        # THEN
+        self.builder.position_at_start(b_then)
+        self._push()
+        for st in then_b:
+            self._process(st)
+        self._pop()
+        self.builder.branch(b_end)
+
+        # ELSE
+        if else_b:
+            self.builder.position_at_start(b_else)
+            self._push()
+            for st in else_b:
+                self._process(st)
+            self._pop()
+            self.builder.branch(b_end)
+
+        self.builder.position_at_start(b_end)
+
+    # ──────────────────────── Functions & return ─────────────────────────
+    def _handle_function(self, name, params, body):
+        func_t = ir.FunctionType(ir.IntType(32), [ir.IntType(32)] * len(params))
+        func = ir.Function(self.module, func_t, name=name)
+        self._cur_scope()[name] = func
+
+        bb_entry = func.append_basic_block("entry")
+        old_builder = self.builder
+        self.builder = ir.IRBuilder(bb_entry)
+
+        self._push()
+        for arg, pname in zip(func.args, params):
+            arg.name = pname
+            ptr = self.builder.alloca(ir.IntType(32), name=pname)
+            self.builder.store(arg, ptr)
+            self._cur_scope()[pname] = ptr
+
+        for st in body:
+            self._process(st)
+        if not self.builder.block.is_terminated:
+            self.builder.ret(ir.Constant(ir.IntType(32), 0))
+        self._pop()
+        self.builder = old_builder
+
+    def _handle_return(self, expr):
+        self.builder.ret(self._eval(expr))
+
+    # ───────────────────────── Scope helpers ────────────────────────────
+    def _cur_scope(self):
+        return self.env_stack[-1]
+
+    def _push(self):
+        self.env_stack.append({})
+
+    def _pop(self):
+        self.env_stack.pop()
+
+    def _lookup(self, name):
+        for scope in reversed(self.env_stack):
+            if name in scope:
+                return scope[name]
+        raise NameError(f"Variable '{name}' is not declared.")
