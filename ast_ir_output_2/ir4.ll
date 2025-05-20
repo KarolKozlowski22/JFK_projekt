@@ -6,32 +6,39 @@ declare i32 @"printf"(i8* %".1", ...)
 
 declare i32 @"scanf"(i8* %".1", ...)
 
-@".str.8341731685562686835" = internal constant [3 x i8] c"%d\00"
-@".str.8084496673346794580" = internal constant [3 x i8] c"%f\00"
-@".str.8515177546619091338" = internal constant [3 x i8] c"%s\00"
-@".str.4313221362129951564" = internal constant [2 x i8] c"\0a\00"
+@".str.5790171083117608925" = internal constant [3 x i8] c"%d\00"
+@".str.3106326101400431079" = internal constant [3 x i8] c"%f\00"
+@".str.8444532226840933137" = internal constant [3 x i8] c"%s\00"
+@".str.3514099826871306073" = internal constant [2 x i8] c"\0a\00"
 define void @"main"()
 {
 entry:
-  br label %"while.cond"
-while.cond:
-  %".3" = load i32, i32* @"i"
-  %".4" = icmp slt i32 %".3", 10
-  %".5" = zext i1 %".4" to i32
-  %".6" = icmp ne i32 %".5", 0
-  br i1 %".6", label %"while.body", label %"while.after"
-while.body:
-  %".8" = load i32, i32* @"i"
-  %".9" = bitcast [3 x i8]* @".str.8341731685562686835" to i8*
-  %".10" = call i32 (i8*, ...) @"printf"(i8* %".9", i32 %".8")
-  %".11" = bitcast [2 x i8]* @".str.4313221362129951564" to i8*
-  %".12" = call i32 (i8*, ...) @"printf"(i8* %".11")
-  %".13" = load i32, i32* @"i"
-  %".14" = add i32 %".13", 1
-  store i32 %".14", i32* @"i"
-  br label %"while.cond"
-while.after:
+  %".2" = call i32 @"test_scope"()
+  %".3" = call i32 @"test_local_scope"()
   ret void
 }
 
-@"i" = common global i32 0
+@"x" = internal global i32 10
+define i32 @"test_scope"()
+{
+entry:
+  %".2" = load i32, i32* @"x"
+  %".3" = bitcast [3 x i8]* @".str.5790171083117608925" to i8*
+  %".4" = call i32 (i8*, ...) @"printf"(i8* %".3", i32 %".2")
+  %".5" = bitcast [2 x i8]* @".str.3514099826871306073" to i8*
+  %".6" = call i32 (i8*, ...) @"printf"(i8* %".5")
+  ret i32 0
+}
+
+define i32 @"test_local_scope"()
+{
+entry:
+  %"x" = alloca i32
+  store i32 20, i32* %"x"
+  %".3" = load i32, i32* %"x"
+  %".4" = bitcast [3 x i8]* @".str.5790171083117608925" to i8*
+  %".5" = call i32 (i8*, ...) @"printf"(i8* %".4", i32 %".3")
+  %".6" = bitcast [2 x i8]* @".str.3514099826871306073" to i8*
+  %".7" = call i32 (i8*, ...) @"printf"(i8* %".6")
+  ret i32 0
+}

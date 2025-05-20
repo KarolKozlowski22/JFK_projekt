@@ -19,8 +19,18 @@ class MyLangParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by MyLangParser#exprStatement.
-    def visitExprStatement(self, ctx:MyLangParser.ExprStatementContext):
+    # Visit a parse tree produced by MyLangParser#structDecl.
+    def visitStructDecl(self, ctx:MyLangParser.StructDeclContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#structMember.
+    def visitStructMember(self, ctx:MyLangParser.StructMemberContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#typeName.
+    def visitTypeName(self, ctx:MyLangParser.TypeNameContext):
         return self.visitChildren(ctx)
 
 
@@ -29,8 +39,18 @@ class MyLangParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MyLangParser#lvalue.
+    def visitLvalue(self, ctx:MyLangParser.LvalueContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MyLangParser#assignment.
     def visitAssignment(self, ctx:MyLangParser.AssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#exprStatement.
+    def visitExprStatement(self, ctx:MyLangParser.ExprStatementContext):
         return self.visitChildren(ctx)
 
 
@@ -96,6 +116,11 @@ class MyLangParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MyLangParser#factor.
     def visitFactor(self, ctx:MyLangParser.FactorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by MyLangParser#primary.
+    def visitPrimary(self, ctx:MyLangParser.PrimaryContext):
         return self.visitChildren(ctx)
 
 

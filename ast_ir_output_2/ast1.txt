@@ -1,1 +1,1 @@
-[('declaration', 'int', 'a', '=', 0), ('declaration', 'int', 'b'), ('if', 'a', [('assignment', 'b', 1)], [('assignment', 'b', 2)]), ('print', 'b')]
+[('struct_decl', 'Person', [('int', 'age'), ('float32', 'height')]), ('declaration', 'Person', 'p'), ('field_assignment', 'p', 'age', 30), ('field_assignment', 'p', 'height', 1.86), ('print', ('field', 'p', 'age')), ('print', ('field', 'p', 'height'))]

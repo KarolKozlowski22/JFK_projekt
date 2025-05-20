@@ -6,57 +6,55 @@
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:                                # %entry
-	movq	a@GOTPCREL(%rip), %rax
-	cmpl	$0, (%rax)
-	je	.LBB0_2
-# %bb.1:                                # %if.then
-	movq	b@GOTPCREL(%rip), %rax
-	movl	$1, (%rax)
-	jmp	.LBB0_3
-.LBB0_2:                                # %if.else
-	movq	b@GOTPCREL(%rip), %rax
-	movl	$2, (%rax)
-.LBB0_3:                                # %if.end
-	pushq	%rax
+	pushq	%rbx
 	.cfi_def_cfa_offset 16
-	movq	b@GOTPCREL(%rip), %rax
-	movl	(%rax), %esi
-	movl	$.str.8341731685562686835, %edi
+	.cfi_offset %rbx, -16
+	movq	p@GOTPCREL(%rip), %rbx
+	movabsq	$4606641987360129054, %rax      # imm = 0x3FEE147B0000001E
+	movq	%rax, (%rbx)
+	movl	$.str.5790171083117608925, %edi
+	movl	$30, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	movl	$.str.4313221362129951564, %edi
+	movl	$.str.3514099826871306073, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	popq	%rax
+	movss	4(%rbx), %xmm0                  # xmm0 = mem[0],zero,zero,zero
+	cvtss2sd	%xmm0, %xmm0
+	movl	$.str.3106326101400431079, %edi
+	movb	$1, %al
+	callq	printf@PLT
+	movl	$.str.3514099826871306073, %edi
+	xorl	%eax, %eax
+	callq	printf@PLT
+	popq	%rbx
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main
 	.cfi_endproc
                                         # -- End function
-	.type	.str.8341731685562686835,@object # @.str.8341731685562686835
+	.type	.str.5790171083117608925,@object # @.str.5790171083117608925
 	.section	.rodata,"a",@progbits
-.str.8341731685562686835:
+.str.5790171083117608925:
 	.asciz	"%d"
-	.size	.str.8341731685562686835, 3
+	.size	.str.5790171083117608925, 3
 
-	.type	.str.8084496673346794580,@object # @.str.8084496673346794580
-.str.8084496673346794580:
+	.type	.str.3106326101400431079,@object # @.str.3106326101400431079
+.str.3106326101400431079:
 	.asciz	"%f"
-	.size	.str.8084496673346794580, 3
+	.size	.str.3106326101400431079, 3
 
-	.type	.str.8515177546619091338,@object # @.str.8515177546619091338
-.str.8515177546619091338:
+	.type	.str.8444532226840933137,@object # @.str.8444532226840933137
+.str.8444532226840933137:
 	.asciz	"%s"
-	.size	.str.8515177546619091338, 3
+	.size	.str.8444532226840933137, 3
 
-	.type	.str.4313221362129951564,@object # @.str.4313221362129951564
-.str.4313221362129951564:
+	.type	.str.3514099826871306073,@object # @.str.3514099826871306073
+.str.3514099826871306073:
 	.asciz	"\n"
-	.size	.str.4313221362129951564, 2
+	.size	.str.3514099826871306073, 2
 
-	.type	a,@object                       # @a
-	.comm	a,4,4
-	.type	b,@object                       # @b
-	.comm	b,4,4
+	.type	p,@object                       # @p
+	.comm	p,8,8
 	.section	".note.GNU-stack","",@progbits

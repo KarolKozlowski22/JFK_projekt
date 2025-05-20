@@ -26,12 +26,30 @@ class MyLangParserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MyLangParser#exprStatement.
-    def enterExprStatement(self, ctx:MyLangParser.ExprStatementContext):
+    # Enter a parse tree produced by MyLangParser#structDecl.
+    def enterStructDecl(self, ctx:MyLangParser.StructDeclContext):
         pass
 
-    # Exit a parse tree produced by MyLangParser#exprStatement.
-    def exitExprStatement(self, ctx:MyLangParser.ExprStatementContext):
+    # Exit a parse tree produced by MyLangParser#structDecl.
+    def exitStructDecl(self, ctx:MyLangParser.StructDeclContext):
+        pass
+
+
+    # Enter a parse tree produced by MyLangParser#structMember.
+    def enterStructMember(self, ctx:MyLangParser.StructMemberContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#structMember.
+    def exitStructMember(self, ctx:MyLangParser.StructMemberContext):
+        pass
+
+
+    # Enter a parse tree produced by MyLangParser#typeName.
+    def enterTypeName(self, ctx:MyLangParser.TypeNameContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#typeName.
+    def exitTypeName(self, ctx:MyLangParser.TypeNameContext):
         pass
 
 
@@ -44,12 +62,30 @@ class MyLangParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MyLangParser#lvalue.
+    def enterLvalue(self, ctx:MyLangParser.LvalueContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#lvalue.
+    def exitLvalue(self, ctx:MyLangParser.LvalueContext):
+        pass
+
+
     # Enter a parse tree produced by MyLangParser#assignment.
     def enterAssignment(self, ctx:MyLangParser.AssignmentContext):
         pass
 
     # Exit a parse tree produced by MyLangParser#assignment.
     def exitAssignment(self, ctx:MyLangParser.AssignmentContext):
+        pass
+
+
+    # Enter a parse tree produced by MyLangParser#exprStatement.
+    def enterExprStatement(self, ctx:MyLangParser.ExprStatementContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#exprStatement.
+    def exitExprStatement(self, ctx:MyLangParser.ExprStatementContext):
         pass
 
 
@@ -167,6 +203,15 @@ class MyLangParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by MyLangParser#factor.
     def exitFactor(self, ctx:MyLangParser.FactorContext):
+        pass
+
+
+    # Enter a parse tree produced by MyLangParser#primary.
+    def enterPrimary(self, ctx:MyLangParser.PrimaryContext):
+        pass
+
+    # Exit a parse tree produced by MyLangParser#primary.
+    def exitPrimary(self, ctx:MyLangParser.PrimaryContext):
         pass
 
 

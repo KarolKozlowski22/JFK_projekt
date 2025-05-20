@@ -1,45 +1,36 @@
 	.text
-	.file	"ir3.ll"
+	.file	"ir5.ll"
 	.globl	main                            # -- Begin function main
 	.p2align	4, 0x90
 	.type	main,@function
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:                                # %entry
-	pushq	%rax
+	pushq	%rbx
 	.cfi_def_cfa_offset 16
-	movl	$3, %edi
-	movl	$4, %esi
-	callq	add@PLT
-	movl	%eax, result(%rip)
+	.cfi_offset %rbx, -16
+	movq	i@GOTPCREL(%rip), %rbx
+	cmpl	$9, (%rbx)
+	jg	.LBB0_3
+	.p2align	4, 0x90
+.LBB0_2:                                # %while.body
+                                        # =>This Inner Loop Header: Depth=1
+	movl	(%rbx), %esi
 	movl	$.str.5790171083117608925, %edi
-	movl	%eax, %esi
 	xorl	%eax, %eax
 	callq	printf@PLT
 	movl	$.str.3514099826871306073, %edi
 	xorl	%eax, %eax
 	callq	printf@PLT
-	popq	%rax
+	incl	(%rbx)
+	cmpl	$9, (%rbx)
+	jle	.LBB0_2
+.LBB0_3:                                # %while.after
+	popq	%rbx
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main
-	.cfi_endproc
-                                        # -- End function
-	.globl	add                             # -- Begin function add
-	.p2align	4, 0x90
-	.type	add,@function
-add:                                    # @add
-	.cfi_startproc
-# %bb.0:                                # %entry
-                                        # kill: def $esi killed $esi def $rsi
-                                        # kill: def $edi killed $edi def $rdi
-	movl	%edi, -4(%rsp)
-	movl	%esi, -8(%rsp)
-	leal	(%rdi,%rsi), %eax
-	retq
-.Lfunc_end1:
-	.size	add, .Lfunc_end1-add
 	.cfi_endproc
                                         # -- End function
 	.type	.str.5790171083117608925,@object # @.str.5790171083117608925
@@ -63,7 +54,6 @@ add:                                    # @add
 	.asciz	"\n"
 	.size	.str.3514099826871306073, 2
 
-	.type	result,@object                  # @result
-	.local	result
-	.comm	result,4,4
+	.type	i,@object                       # @i
+	.comm	i,4,4
 	.section	".note.GNU-stack","",@progbits

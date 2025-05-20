@@ -1,1 +1,1 @@
-[('function', 'add', ['a', 'b'], [('return', ('+', 'a', 'b'))]), ('declaration', 'int', 'result', '=', ('call', 'add', [3, 4])), ('print', 'result')]
+[('declaration', 'int', 'a', '=', 0), ('declaration', 'int', 'b'), ('if', 'a', [('assignment', 'b', 1)], [('assignment', 'b', 2)]), ('print', 'b')]

@@ -1,0 +1,10 @@
+struct Person {
+    int   age;
+    float32 height;
+};
+
+Person p;
+p.age = 30;
+p.height = 1.86;
+print p.age;
+print p.height;

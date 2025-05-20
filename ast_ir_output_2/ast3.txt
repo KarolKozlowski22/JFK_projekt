@@ -1,1 +1,1 @@
-[('declaration', 'int', 'x', '=', 10), ('function', 'test_scope', [], [('print', 'x')]), ('function', 'test_local_scope', [], [('declaration', 'int', 'x', '=', 20), ('print', 'x')]), ('call', 'test_scope', []), ('call', 'test_local_scope', [])]
+[('function', 'add', ['a', 'b'], [('return', ('+', 'a', 'b'))]), ('declaration', 'int', 'result', '=', ('call', 'add', [3, 4])), ('print', 'result')]

@@ -1,43 +1,67 @@
 lexer grammar MyLangLexer;
 
-INT : 'int';
-FLOAT32: 'float32';
-FLOAT64 : 'float64';
-PRINT : 'print';
-READ : 'read';
-STRING : '"' (~["\\] | '\\' .)* '"';
-STRING_TYPE : 'string';
-IF : 'if';
-ELSE : 'else';
-WHILE : 'while';
-DEF : 'def';
-CURLY_BRACKET_OPEN : '{';
+/* ───────────────────── Słowa kluczowe & typy ─────────────────────── */
+STRUCT          : 'struct';
+DEF             : 'def';
+IF              : 'if';
+ELSE            : 'else';
+WHILE           : 'while';
+RETURN          : 'return';
+
+INT             : 'int';
+FLOAT32         : 'float32';
+FLOAT64         : 'float64';
+STRING_TYPE     : 'string';
+PRINT           : 'print';
+READ            : 'read';
+
+/* ───────────────────────── Operatory & znaki ─────────────────────── */
+AND             : '&&';
+OR              : '||';
+XOR             : '^';
+NEG             : '!';
+
+LE              : '<=';
+GE              : '>=';
+EQ              : '==';
+NEQ             : '!=';
+
+LT              : '<';
+GT              : '>';
+PLUS            : '+';
+MINUS           : '-';
+MULTIPLY        : '*';
+DIVIDE          : '/';
+EQUALITY        : '=';
+
+DOT             : '.';
+COMMA           : ',';
+SEMICOLON       : ';';
+
+LP              : '(';
+RP              : ')';
+CURLY_BRACKET_OPEN  : '{';
 CURLY_BRACKET_CLOSE : '}';
-RETURN : 'return';
-COMMA : ',';
 
-LT : '<';
-GT : '>';
-LE : '<=';
-GE : '>=';
-EQ : '==';
-NEQ: '!=';
+/* ───────────────────────── Literały ──────────────────────────────── */
+STRING
+    : '"' ( ~["\\] | '\\' . )* '"'
+    ;
 
+NUMBER
+    : [0-9]+ ( '.' [0-9]+ )?
+    ;
 
-AND : '&&';
-OR : '||';
-XOR : '^';
-NEG : '!';
+/* ───────────────────────── Inne tokeny ───────────────────────────── */
+ID
+    : [a-zA-Z_][a-zA-Z_0-9]*
+    ;
 
-SEMICOLON : ';';
-EQUALITY : '=';
-PLUS : '+';
-MINUS : '-';
-MULTIPLY : '*';
-DIVIDE : '/';
-LP : '(';
-RP : ')';
+/* ───────────────────────── Komentarze & białe znaki ──────────────── */
+LINE_COMMENT
+    : '//' ~[\r\n]* -> skip
+    ;
 
-NUMBER : [0-9]+('.'[0-9]+)?;
-ID : [a-zA-Z_][a-zA-Z_0-9]*;
-WS : [ \t\r\n]+ -> skip;
+WS
+    : [ \t\r\n]+ -> skip
+    ;

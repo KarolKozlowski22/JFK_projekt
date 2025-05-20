@@ -13,7 +13,8 @@ class IRGenerator:
 
         self.builder = None           # current IRBuilder
         self.env_stack = [{}]         # symbol tables stack (0 = global)
-        self.pending_inits = []       # delayed initialisations for globals
+        self.pending_inits = []
+        self.struct_defs = {}        # delayed initialisations for globals
 
         # libc printf / scanf
         voidptr = ir.PointerType(ir.IntType(8))
@@ -57,30 +58,44 @@ class IRGenerator:
 
     # ───────────────────────────── Generate ──────────────────────────────
     def generate(self, ast):
-        """Three-pass module generation."""
-        main = ir.Function(
-            self.module, ir.FunctionType(ir.VoidType(), []), name="main"
-        )
+        """
+        Czteroprzebiegowe generowanie modułu:
+           0) struktury          – muszą być znane przed typowaniem zmiennych
+           1) deklaracje glob.   – tworzy zmienne i ewentualnie odkłada init
+           2) funkcje            – prototyp + ciało
+           2.5) opóźnione inicjalizacje globali (non-const)
+           3) pozostałe instrukcje top-level (wykonywane w main)
+        """
+        # ── setup funkcji main ───────────────────────────────────────────
+        main = ir.Function(self.module,
+                           ir.FunctionType(ir.VoidType(), []),
+                           name="main")
         entry = main.append_basic_block("entry")
         self.builder = ir.IRBuilder(entry)
 
-        # Pass 1 – globals
+        # ── Pass 0 – struktury ───────────────────────────────────────────
+        for n in ast:
+            if n[0] == "struct_decl":
+                # (name, fields) = (n[1], n[2])
+                self._handle_struct_decl(n[1], n[2])
+
+        # ── Pass 1 – deklaracje globalne ────────────────────────────────
         for n in ast:
             if n[0] == "declaration":
                 self._handle_declaration(n)
 
-        # Pass 2 – functions
+        # ── Pass 2 – funkcje ─────────────────────────────────────────────
         for n in ast:
             if n[0] == "function":
                 self._handle_function(n[1], n[2], n[3])
 
-        # Pass 2.5 – delayed global initialisers
+        # ── Pass 2.5 – opóźnione inicjalizacje globali ───────────────────
         for a in self.pending_inits:
             self._handle_assignment(a)
 
-        # Pass 3 – remaining top-level statements (executed in main)
+        # ── Pass 3 – instrukcje top-level ────────────────────────────────
         for n in ast:
-            if n[0] not in ("declaration", "function"):
+            if n[0] not in ("struct_decl", "declaration", "function"):
                 self._process(n)
 
         self.builder.ret_void()
@@ -89,26 +104,52 @@ class IRGenerator:
     # ───────────────────────── Dispatcher ────────────────────────────────
     def _process(self, node):
         match node:
+            # ─── deklaracje i struktury ───────────────────────────────
             case ("declaration", *_):
                 self._handle_declaration(node)
-            case ("assignment", *_):
+            case ("struct_decl", name, fields):
+                self._handle_struct_decl(name, fields)
+
+            # ─── przypisania: zwykłe i do pola ────────────────────────
+            case ("assignment" | "field_assignment", *_):
                 self._handle_assignment(node)
+
+            # ─── pozostałe węzły ───────────────────────────────────────
             case ("print", *_):
                 self._handle_print(node)
             case ("read", *_):
                 self._handle_read(node)
-            case ("if", c, t, e):
-                self._handle_if(c, t, e)
-            case ("while", c, b):
-                self._handle_while(c, b)
-            case ("function", n, p, b):
-                self._handle_function(n, p, b)
-            case ("return", e):
-                self._handle_return(e)
-            case ("call", n, a):
-                self._eval(("call", n, a))
+            case ("if", cond, then_b, else_b):
+                self._handle_if(cond, then_b, else_b)
+            case ("while", cond, body):
+                self._handle_while(cond, body)
+            case ("function", name, params, body):
+                self._handle_function(name, params, body)
+            case ("return", expr):
+                self._handle_return(expr)
+            case ("call", fname, args):
+                self._eval(("call", fname, args))
             case _:
                 raise ValueError(f"Unknown AST node: {node}")
+
+            
+    def _handle_struct_decl(self, name, fields):
+        llvm_fields = [self._llvm_type(t)[0] for t, _ in fields]
+        st = ir.LiteralStructType(llvm_fields)
+        idx_map = {fname: i for i, (_, fname) in enumerate(fields)}
+        self.struct_defs[name] = (st, idx_map)
+
+    def _field_ptr(self, obj_ptr, field_name):
+        stype = obj_ptr.type.pointee
+        for _, (llvm_stype, idx_map) in self.struct_defs.items():
+            if llvm_stype is stype:
+                idx = idx_map[field_name]
+                break
+        else:
+            raise KeyError("Struct type not registered")
+        zero = ir.Constant(ir.IntType(32), 0)
+        return self.builder.gep(obj_ptr, [zero, ir.Constant(ir.IntType(32), idx)])
+
 
     # ─────────────────────── Declarations & assign ───────────────────────
     def _llvm_type(self, kwd):
@@ -121,6 +162,10 @@ class IRGenerator:
         if kwd == "string":
             t = ir.PointerType(ir.IntType(8))
             return t, ir.Constant(t, None)
+        if kwd in self.struct_defs:
+            stype = self.struct_defs[kwd][0]
+            zero = ir.Constant(stype, None) 
+            return stype, zero
         raise ValueError("unknown type")
 
     def _handle_declaration(self, node):
@@ -131,6 +176,10 @@ class IRGenerator:
         # ─── Global ──────────────────────────────────────────────
         if self._in_global_scope():
             g = ir.GlobalVariable(self.module, llvm_t, name)
+            if typ_kwd in self.struct_defs:
+                g.linkage = "internal"
+                g.initializer = zero  
+
             if init_expr is None or (isinstance(init_expr, (int, float)) and init_expr == 0):
                 g.linkage = "common" 
             else:
@@ -152,10 +201,18 @@ class IRGenerator:
         self._cur_scope()[name] = ptr
 
     def _handle_assignment(self, node):
-        _, name, expr = node
-        val = self._eval(expr)
-        ptr = self._lookup(name)
-        self.builder.store(val, ptr)
+        tag = node[0]
+        if tag == "assignment":
+            _, name, expr = node
+            val = self._eval(expr)
+            ptr = self._lookup(name)
+            self.builder.store(val, ptr)
+        elif tag == "field_assignment":
+            _, obj_name, field, expr = node
+            val = self._eval(expr)
+            obj_ptr = self._lookup(obj_name)
+            fptr = self._field_ptr(obj_ptr, field)   # ← tylko 2 arg.
+            self.builder.store(val, fptr)
 
     # ───────────────────────────── I/O ────────────────────────────────────
     def _handle_print(self, node):
@@ -227,7 +284,12 @@ class IRGenerator:
             cmp = self.builder.icmp_unsigned("!=", v, ir.Constant(v.type, 0))
             inv = self.builder.xor(cmp, ir.Constant(ir.IntType(1), 1))
             return self.builder.zext(inv, ir.IntType(32))
-
+        
+        if op == "field":
+            _, base_expr, field = expr
+            base_ptr = (self._lookup(base_expr) if isinstance(base_expr, str) else self._eval(base_expr))
+            fptr = self._field_ptr(base_ptr, field)   # ← tylko 2 arg.
+            return self.builder.load(fptr)
         # binary
         left = self._eval(expr[1])
         right = self._eval(expr[2])
